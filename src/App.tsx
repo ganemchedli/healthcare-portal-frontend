@@ -1,10 +1,13 @@
 import "./App.css";
-import Loginform from "./component/login/loginform";
+import "bootstrap/dist/css/bootstrap.min.css";
+import Loginform from "./pages/login/loginform";
+import SignupForm from "./pages/signup/signupform";
 
 function App() {
   return (
     <>
-      <Loginform />
+      <SignupForm />
+      {/* <Loginform></Loginform> */}
     </>
   );
 }
