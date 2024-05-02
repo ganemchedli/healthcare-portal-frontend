@@ -17,13 +17,13 @@
   /* padding: 20px; */
   background: linear-gradient(to bottom right, #0cb35c, #01bfe6);
   width: auto;
-  height: 725px;
+  height: 46em;
 }
 
 .form-container {
   background-color: white;
   width: 85%;
-  height: 60%;
+  height: 30em;
   border-radius: 5px;
   padding: 40px;
 }

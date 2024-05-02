@@ -1,6 +1,7 @@
 import { useState, FormEvent } from "react";
 import axios from "../../config/axios";
 import "./loginform.css";
+import { useNavigate } from "react-router-dom";
 
 const LoginForm: React.FC = () => {
   const [email, setemail] = useState<string>("");
@@ -31,6 +32,12 @@ const LoginForm: React.FC = () => {
       // Handle any errors that occur during the fetch operation
       console.error("Error:", error);
     }
+  };
+
+  const navigate = useNavigate();
+
+  const handleSignUpClick = () => {
+    navigate("/signup"); // Redirect to the sign-up page
   };
   return (
     <div className="container-xl">
@@ -103,6 +110,12 @@ const LoginForm: React.FC = () => {
                 </button>
               </div>
             </form>
+            <div className="fs-6 pt-3">
+              Don't have an account ?{" "}
+              <a href="" onClick={handleSignUpClick}>
+                Create an account
+              </a>
+            </div>
           </div>
         </div>
       </div>
@@ -110,9 +123,3 @@ const LoginForm: React.FC = () => {
   );
 };
 export default LoginForm;
-
-// import React from "react";
-
-// export default function loginform() {
-//   return <div>loginform</div>;
-// }
