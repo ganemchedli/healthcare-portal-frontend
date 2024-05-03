@@ -8,7 +8,7 @@
   padding: 15%;
 }
 
-.form {
+.form-login {
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -20,7 +20,7 @@
   height: 46em;
 }
 
-.form-container {
+.form-container-login {
   background-color: white;
   width: 85%;
   height: 30em;

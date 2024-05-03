@@ -1,9 +1,8 @@
 import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import LoginForm from "./pages/login/loginform";
 import SignUpForm from "./pages/signup/signupform";
-
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
 function App() {
   return (

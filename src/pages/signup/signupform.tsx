@@ -10,11 +10,11 @@ const SignupForm: React.FC = () => {
   const [confirmPassword, setConfirmPassword] = useState<string>("");
   const [firstname, setFirstName] = useState<string>("");
   const [lastname, setLastName] = useState<string>("");
-  const [state, setState] = useState<String>("");
-  const [role, setRole] = useState<String>("");
-  const [city, setCity] = useState<String>("");
-  const [address, setAddress] = useState<String>("");
-  const [zipCode, setZipCode] = useState<String>("");
+  const [state, setState] = useState<string>("");
+  const [role, setRole] = useState<string>("");
+  const [city, setCity] = useState<string>("");
+  const [address, setAddress] = useState<string>("");
+  const [zipCode, setZipCode] = useState<number>();
 
   const navigate = useNavigate();
 
@@ -24,18 +24,16 @@ const SignupForm: React.FC = () => {
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
-
     // Prepare the data to send to the backend
     const data = {
-      firstname: firstname,
-      lastname: lastname,
+      firstName: firstname,
+      lastName: lastname,
       email: email,
       password: password,
-      confirmPassword: confirmPassword,
       role: role,
       state: state,
       city: city,
-      zip: zipCode,
+      zipCode: zipCode,
       address: address,
     };
 
@@ -47,6 +45,7 @@ const SignupForm: React.FC = () => {
         // Check if the request was successful
         if (response.status) {
           // Handle successful login (redirect, update state, etc.)
+          console.log(data);
           console.log("Sign up successful");
         } else {
           // Handle failed login (display error message, etc.)
@@ -72,8 +71,8 @@ const SignupForm: React.FC = () => {
             </div>
           </div>
         </div>
-        <div className="col form">
-          <div className="form-container pt-5">
+        <div className="col form-signup">
+          <div className="form-container-signup pt-5">
             <h2>Sign up</h2>
             <p>Create your account</p>
             <form
@@ -82,25 +81,27 @@ const SignupForm: React.FC = () => {
               method="POST"
               className="row g-3"
             >
-              <div className="col-md-6">
-                <label htmlFor="fistname" className="form-label">
+              <div className="col-12">
+                <label htmlFor="firstname" className="form-label">
                   Firstname
                 </label>
                 <input
                   type="text"
                   className="form-control"
                   id="firstname"
+                  placeholder=""
                   onChange={(e) => setFirstName(e.target.value)}
                 />
               </div>
-              <div className="col-md-6">
+              <div className="col-12">
                 <label htmlFor="lastname" className="form-label">
                   Lastname
                 </label>
                 <input
-                  type="text "
+                  type="text"
                   className="form-control"
                   id="lastname"
+                  placeholder=""
                   onChange={(e) => setLastName(e.target.value)}
                 />
               </div>
@@ -178,18 +179,22 @@ const SignupForm: React.FC = () => {
                   Zip
                 </label>
                 <input
-                  type="text"
+                  type="number"
                   className="form-control"
                   id="zipCode"
-                  onChange={(e) => setZipCode(e.target.value)}
+                  onChange={(e) => setZipCode(Number(e.target.value))}
                 />
               </div>
               <div className="col">
-                <select className="form-select custom-select-width">
+                <select
+                  className="form-select custom-select-width"
+                  onChange={(e) => setRole(e.target.value)}
+                  value="1"
+                >
                   <option selected>Select you role</option>
-                  <option value="1">Patient</option>
-                  <option value="2">Doctor</option>
-                  <option value="3">Nurse</option>
+                  <option value="PATIENT">Patient</option>
+                  <option value="DOCTOR">Doctor</option>
+                  <option value="NURSE">Nurse</option>
                 </select>
               </div>
               <div className="col-12 text-center pt-3">
@@ -198,7 +203,7 @@ const SignupForm: React.FC = () => {
                 </button>
               </div>
             </form>
-            <div className="fs-6 pt-3">
+            <div className="fs-6 pt-3 ">
               Already have an account ?{" "}
               <a href="" onClick={handleSignInClick}>
                 Sign in

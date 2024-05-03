@@ -52,8 +52,8 @@ const LoginForm: React.FC = () => {
             </div>
           </div>
         </div>
-        <div className="col form">
-          <div className="form-container pt-5">
+        <div className="col form-login">
+          <div className="form-container-login pt-5">
             <h2>Sign in</h2>
             <p>Enter your email and password to login</p>
             <form onSubmit={handleSubmit} action="#" method="POST">
