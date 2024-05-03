@@ -1,4 +1,5 @@
 import { useState, FormEvent } from "react";
+import Cookies from "js-cookie";
 import axios from "../../config/axios";
 import "./loginform.css";
 import { useNavigate } from "react-router-dom";
@@ -24,10 +25,11 @@ const LoginForm: React.FC = () => {
       if (response.status) {
         // Handle successful login (redirect, update state, etc.)
         console.log("Login successful");
-      } else {
-        // Handle failed login (display error message, etc.)
-        console.error("Login failed");
       }
+      // Extract the token from the response data
+      const token = response.data.token;
+      // Store the token in a cookie with an expiration time (optional)
+      Cookies.set("token", token, { expires: 7 }); // Example: Token expires in 7 days
     } catch (error) {
       // Handle any errors that occur during the fetch operation
       console.error("Error:", error);
