@@ -17,13 +17,13 @@
   /* padding: 20px; */
   background: linear-gradient(to bottom right, #0cb35c, #01bfe6);
   width: auto;
-  height: 60em;
+  height: 80em;
 }
 
 .form-container-signup {
   background-color: white;
   width: 85%;
-  height: 56em;
+  height: 70em;
   border-radius: 5px;
   padding: 40px;
 }

@@ -15,6 +15,8 @@ const SignupForm: React.FC = () => {
   const [city, setCity] = useState<string>("");
   const [address, setAddress] = useState<string>("");
   const [zipCode, setZipCode] = useState<number>();
+  const [phoneNumber, setPhoneNumber] = useState<number>();
+  const [birthday, setBirthDay] = useState<Date>();
 
   const navigate = useNavigate();
 
@@ -35,6 +37,8 @@ const SignupForm: React.FC = () => {
       city: city,
       zipCode: zipCode,
       address: address,
+      phoneNumber: phoneNumber,
+      birthday: birthday,
     };
 
     try {
@@ -91,6 +95,7 @@ const SignupForm: React.FC = () => {
                   id="firstname"
                   placeholder=""
                   onChange={(e) => setFirstName(e.target.value)}
+                  required
                 />
               </div>
               <div className="col-12">
@@ -103,6 +108,7 @@ const SignupForm: React.FC = () => {
                   id="lastname"
                   placeholder=""
                   onChange={(e) => setLastName(e.target.value)}
+                  required
                 />
               </div>
               <div className="col-12">
@@ -115,6 +121,7 @@ const SignupForm: React.FC = () => {
                   id="email"
                   placeholder="example@gmail.com"
                   onChange={(e) => setEmail(e.target.value)}
+                  required
                 />
               </div>
               <div className="col-12">
@@ -127,6 +134,33 @@ const SignupForm: React.FC = () => {
                   id="address"
                   placeholder="City"
                   onChange={(e) => setAddress(e.target.value)}
+                  required
+                />
+              </div>
+              <div className="col-12">
+                <label htmlFor="phoneNumber" className="form-label">
+                  Phone number
+                </label>
+                <input
+                  type="number"
+                  className="form-control"
+                  id="phoneNumber"
+                  placeholder="+216 XX XXXX XXX"
+                  onChange={(e) => setPhoneNumber(Number(e.target.value))}
+                  required
+                />
+              </div>
+              <div className="col-12">
+                <label htmlFor="birthday" className="form-label">
+                  Birthday
+                </label>
+                <input
+                  type="date"
+                  className="form-control"
+                  id="birthday"
+                  placeholder="City"
+                  onChange={(e) => setBirthDay(new Date(e.target.value))}
+                  required
                 />
               </div>
               <div className="col-12">
@@ -138,6 +172,7 @@ const SignupForm: React.FC = () => {
                   className="form-control"
                   id="password"
                   onChange={(e) => setPassword(e.target.value)}
+                  required
                 />
               </div>
               <div className="col-12">
@@ -149,6 +184,7 @@ const SignupForm: React.FC = () => {
                   className="form-control"
                   id="confirmPassword"
                   onChange={(e) => setConfirmPassword(e.target.value)}
+                  required
                 />
               </div>
 
@@ -161,6 +197,7 @@ const SignupForm: React.FC = () => {
                   className="form-control"
                   id="city"
                   onChange={(e) => setCity(e.target.value)}
+                  required
                 />
               </div>
               <div className="col-md-4">
@@ -172,6 +209,7 @@ const SignupForm: React.FC = () => {
                   type="text"
                   className="form-control"
                   onChange={(e) => setState(e.target.value)}
+                  required
                 />
               </div>
               <div className="col-md-2">
@@ -183,6 +221,7 @@ const SignupForm: React.FC = () => {
                   className="form-control"
                   id="zipCode"
                   onChange={(e) => setZipCode(Number(e.target.value))}
+                  required
                 />
               </div>
               <div className="col">
@@ -190,6 +229,7 @@ const SignupForm: React.FC = () => {
                   className="form-select custom-select-width"
                   onChange={(e) => setRole(e.target.value)}
                   value="1"
+                  required
                 >
                   <option selected>Select you role</option>
                   <option value="PATIENT">Patient</option>
