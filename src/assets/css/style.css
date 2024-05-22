@@ -16502,9 +16502,9 @@ input[type=password]::-ms-clear
 	animation: 1s blink infinite .99999s
 }
 .chat-cont-left .nav-tabs .nav-item.show .nav-link, .nav-tabs .nav-link.active {
-    color: #ff5837;
+    color: #66CDAA;
     background-color: #fff;
-    border-color: #dee2e6 #dee2e6 #fff;
+    border-color: #66CDAA #66CDAA #fff;
 }
 .chat-cont-right .chat-body .media.received .media-body .msg-box {
 	position: relative;

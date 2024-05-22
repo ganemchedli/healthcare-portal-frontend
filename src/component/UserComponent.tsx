@@ -2,19 +2,20 @@ import { useEffect, useState } from "react";
 import { createUser, getUser, updateUser } from "../services/UserServices";
 import { useNavigate, useParams } from "react-router-dom";
 
+//   interface User {
+//     id: number;
+//     firstName: string;
+//     lastName: string;
+//     email: string;
+//     password: string;
+//     address: string;
+//     state: string;
+//     city: string;
+//     zipCode: number;
+//     role: string;
+//   }
+
 const UserComponent = () => {
-  //   interface User {
-  //     id: number;
-  //     firstName: string;
-  //     lastName: string;
-  //     email: string;
-  //     password: string;
-  //     address: string;
-  //     state: string;
-  //     city: string;
-  //     zipCode: number;
-  //     role: string;
-  //   }
   const [firstName, setFirstName] = useState<string>("");
   const [lastName, setLastName] = useState<string>("");
   const [email, setEmail] = useState<string>("");

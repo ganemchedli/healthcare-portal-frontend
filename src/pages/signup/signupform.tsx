@@ -2,6 +2,7 @@ import React, { useState, FormEvent } from "react";
 import axios from "../../config/axios";
 import "./signupform.css";
 import { useNavigate } from "react-router-dom";
+import { register, uploadImage } from "../../services/AuthServices";
 
 const SignupForm: React.FC = () => {
   //ui states
@@ -17,7 +18,10 @@ const SignupForm: React.FC = () => {
   const [zipCode, setZipCode] = useState<number>();
   const [phoneNumber, setPhoneNumber] = useState<number>();
   const [birthday, setBirthDay] = useState<Date>();
+  // file upload state
+  const [image, setImage] = useState<File | null>(null);
 
+  //Navigate hook
   const navigate = useNavigate();
 
   const handleSignInClick = () => {
@@ -39,26 +43,35 @@ const SignupForm: React.FC = () => {
       address: address,
       phoneNumber: phoneNumber,
       birthday: birthday,
+      image: image,
     };
+
+    // const imageData = {
+    //   username: firstname,
+    //   image: image,
+    // };
 
     try {
       // Send a POST request to your Spring Boot backend
-      if (password === confirmPassword) {
-        const response = await axios.post("auth/register", data);
+      if (password === confirmPassword && image) {
+        const response = await register(data);
 
         // Check if the request was successful
-        if (response.status) {
+        if (response.status == 200) {
           // Handle successful login (redirect, update state, etc.)
-          console.log(data);
+          console.log(response.data);
           console.log("Sign up successful");
-        } else {
-          // Handle failed login (display error message, etc.)
-          console.error("Sign up failed");
         }
       }
     } catch (error) {
       // Handle any errors that occur during the fetch operation
-      console.error("Error:", error);
+      console.error("Sign up failed:", error);
+    }
+  };
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      setImage(e.target.files[0]);
     }
   };
 
@@ -237,6 +250,17 @@ const SignupForm: React.FC = () => {
                   <option value="NURSE">Nurse</option>
                 </select>
               </div>
+              {/* ******************* */}
+              <div>
+                Upload user image
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                  required
+                />
+              </div>
+              {/* ******************* */}
               <div className="col-12 text-center pt-3">
                 <button type="submit" className="btn btn-primary col-md-10">
                   Sign up

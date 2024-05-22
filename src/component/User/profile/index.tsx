@@ -1,13 +1,30 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import StudentHeader from "../header";
 import Footer from "../../footer";
 import { User11 } from "../../imagepath";
 import { Link } from "react-router-dom";
-import StudentSideBar from "../sidebar";
+import UserSideBar from "../sidebar";
 import Select from "react-select";
+import { jwtDecode } from "jwt-decode";
+import { getUser } from "../../../services/UserServices";
+import axios from "../../../config/axios";
 
-export default function StudentEditProfile() {
+interface UserData {
+  firstName: String;
+  lastName: String;
+  password: String;
+  address: String;
+  state: String;
+  city: String;
+  zipCode: Number;
+  role: String;
+  phoneNumber: String;
+  birthday: String;
+}
+
+export default function UserEditProfile() {
   const [setCountry] = useState(null);
+
   const options = [
     { label: "Select Country", value: "Country" },
     { label: "India", value: "India" },
@@ -56,6 +73,7 @@ export default function StudentEditProfile() {
       transition: "250ms",
     }),
   };
+
   return (
     <div className="main-wrapper">
       {/* <StudentHeader activeMenu={"Profile"} /> */}
@@ -64,7 +82,7 @@ export default function StudentEditProfile() {
         <div className="container">
           <div className="row">
             {/* Sidebar */}
-            <StudentSideBar activeMenu="EditProfile" />
+            <UserSideBar activeMenu="EditProfile" />
             {/* Sidebar */}
 
             {/* Profile Details */}
@@ -80,7 +98,7 @@ export default function StudentEditProfile() {
                   <div className="course-group mb-0 d-flex">
                     <div className="course-group-img d-flex align-items-center">
                       <Link to="/students-profile">
-                        <img src={User11} alt="" className="img-fluid" />
+                        <img src="" alt="" className="img-fluid" />
                       </Link>
                       <div className="course-name">
                         <h4>
@@ -223,7 +241,7 @@ export default function StudentEditProfile() {
                           </div>
                         </div>
                         <div className="update-profile">
-                          <button type="button" className="btn btn-primary">
+                          <button type="button" className="btn btn-success">
                             Update Profile
                           </button>
                         </div>

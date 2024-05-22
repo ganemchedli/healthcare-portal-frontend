@@ -1,4 +1,4 @@
-import React from "react";
+import { useEffect, useState } from "react";
 import {
   Bell,
   Calendar,
@@ -13,34 +13,63 @@ import {
   UserPlus,
 } from "react-feather";
 import { Link } from "react-router-dom";
-import { ProfileBg, User11 } from "../../imagepath";
+import { getUser } from "../../../services/UserServices";
+
+import userimage from "../../../assets/1-intro-photo-final.jpg";
+
+interface UserData {
+  firstName: String;
+  lastName: String;
+  password: String;
+  address: String;
+  state: String;
+  city: String;
+  zipCode: Number;
+  role: String;
+  phoneNumber: String;
+  birthday: String;
+}
 
 // eslint-disable-next-line react/prop-types
-export default function StudentSideBar({ activeMenu }: { activeMenu: string }) {
+export default function UserSideBar({ activeMenu }: { activeMenu: string }) {
+  const [userData, setUserData] = useState<UserData>();
+
+  useEffect(() => {
+    getUserData();
+  }, []);
+
+  const getUserData = async () => {
+    try {
+      const userId = localStorage.getItem("userId");
+      const response = await getUser(userId);
+      if (response.status == 200) {
+        setUserData(response.data);
+      }
+    } catch (error) {
+      console.log("Error getting user data", error);
+    }
+  };
+
+  console.log("user data", userData); // Display user data
+
   return (
     <div className="col-xl-3 col-md-4 theiaStickySidebar">
       <div className="settings-widget dash-profile mb-3">
         <div className="settings-menu p-0">
           <div className="profile-bg">
-            <h5>Beginner</h5>
-            <img src={ProfileBg} alt="" />
+            <img src={userimage} alt="" />
             <div className="profile-img">
               <Link to="/students-profile">
-                <img src={User11} alt="" />
+                <img src={userimage} alt="" />
               </Link>
             </div>
           </div>
           <div className="profile-group">
             <div className="profile-name text-center">
               <h4>
-                <Link to="/students-profile">Rolands R</Link>
+                <Link to="/students-profile">{userData?.firstName}</Link>
               </h4>
-              <p>Student</p>
-            </div>
-            <div className="go-dashboard text-center">
-              <Link to="/deposit-student-dashboard" className="btn btn-primary">
-                Go to Dashboard
-              </Link>
+              <p>{userData?.role}</p>
             </div>
           </div>
         </div>
@@ -54,7 +83,7 @@ export default function StudentSideBar({ activeMenu }: { activeMenu: string }) {
                 activeMenu === "EditProfile" ? "nav-item active" : "nav-item"
               }
             >
-              <Link to="/setting-edit-profile" className="nav-link">
+              <Link to="/setting-edit-profile" className="">
                 <i>
                   <Settings size={20} />{" "}
                 </i>{" "}
@@ -74,21 +103,7 @@ export default function StudentSideBar({ activeMenu }: { activeMenu: string }) {
                 Security
               </Link>
             </li>
-            <li className="nav-item">
-              <Link
-                to="/setting-student-social-profile"
-                className={
-                  activeMenu === "SocialProfile"
-                    ? "nav-item active"
-                    : "nav-item"
-                }
-              >
-                <i>
-                  <RefreshCw size={20} />
-                </i>{" "}
-                Social Profiles
-              </Link>
-            </li>
+
             <li className="nav-item">
               <Link
                 to="/setting-student-notification"
@@ -132,32 +147,6 @@ export default function StudentSideBar({ activeMenu }: { activeMenu: string }) {
               </Link>
             </li>
             <li className="nav-item">
-              <Link
-                to="/setting-student-accounts"
-                className={
-                  activeMenu === "Accounts" ? "nav-item active" : "nav-item"
-                }
-              >
-                <i>
-                  <User size={20} />
-                </i>{" "}
-                Linked Accounts
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link
-                to="/setting-student-referral"
-                className={
-                  activeMenu === "Referral" ? "nav-item active" : "nav-item"
-                }
-              >
-                <i>
-                  <UserPlus size={20} />
-                </i>{" "}
-                Referrals
-              </Link>
-            </li>
-            <li className="nav-item">
               <Link to="/login" className="nav-link">
                 <i>
                   <Power size={20} />
@@ -175,61 +164,6 @@ export default function StudentSideBar({ activeMenu }: { activeMenu: string }) {
                 </Link>
               </li>
             ) : null}
-          </ul>
-          <h3>SUBSCRIPTION</h3>
-          <ul>
-            <li className="nav-item">
-              <Link
-                to="/setting-student-subscription"
-                className={
-                  activeMenu === "Subscription" ? "nav-item active" : "nav-item"
-                }
-              >
-                <i>
-                  <Calendar size={20} />
-                </i>{" "}
-                My Subscriptions
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link
-                to="/setting-student-billing"
-                className={
-                  activeMenu === "Billing" ? "nav-item active" : "nav-item"
-                }
-              >
-                <i>
-                  <CreditCard size={20} />
-                </i>{" "}
-                Billing Info
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link
-                to="/setting-student-payment"
-                className={
-                  activeMenu === "Payment" ? "nav-item active" : "nav-item"
-                }
-              >
-                <i>
-                  <CreditCard size={20} />
-                </i>{" "}
-                Payment
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link
-                to="/setting-student-invoice"
-                className={
-                  activeMenu === "Invoice" ? "nav-item active" : "nav-item"
-                }
-              >
-                <i>
-                  <Clipboard size={20} />
-                </i>{" "}
-                Invoice
-              </Link>
-            </li>
           </ul>
         </div>
       </div>

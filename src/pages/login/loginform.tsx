@@ -1,5 +1,4 @@
 import { useState, FormEvent } from "react";
-import Cookies from "js-cookie";
 import axios from "../../config/axios";
 import "./loginform.css";
 import { useNavigate } from "react-router-dom";
@@ -7,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 const LoginForm: React.FC = () => {
   const [email, setemail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const navigate = useNavigate();
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
@@ -23,24 +23,27 @@ const LoginForm: React.FC = () => {
 
       // Check if the request was successful
       if (response.status) {
+        // Extract the token from the response data
+        const token = JSON.stringify(response.data.token);
+
+        //Store token in localstorage
+        localStorage.setItem("token", token);
+        localStorage.setItem("userId", response.data.id);
+        localStorage.setItem("User email", response.data.email);
         // Handle successful login (redirect, update state, etc.)
         console.log("Login successful");
+        navigate("/profile");
       }
-      // Extract the token from the response data
-      const token = response.data.token;
-      // Store the token in a cookie with an expiration time (optional)
-      Cookies.set("token", token, { expires: 7 }); // Example: Token expires in 7 days
     } catch (error) {
       // Handle any errors that occur during the fetch operation
       console.error("Error:", error);
     }
   };
 
-  const navigate = useNavigate();
-
   const handleSignUpClick = () => {
     navigate("/signup"); // Redirect to the sign-up page
   };
+
   return (
     <div className="container-xl">
       <div className="row">

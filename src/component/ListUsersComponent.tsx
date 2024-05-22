@@ -55,10 +55,12 @@ const ListUsersComponent = () => {
 
   return (
     <div className="container">
-      <h2 className="text-center">List of users</h2>
-      <button className="btn btn-primary mb-2 " onClick={addNewUser}>
-        Add User
-      </button>
+      <h2 className="">List of users</h2>
+      <div className="text-end">
+        <button className="btn btn-primary mb-2" onClick={addNewUser}>
+          Add User
+        </button>
+      </div>
       <table className="table table-striped table-bordred">
         <thead>
           <tr>
