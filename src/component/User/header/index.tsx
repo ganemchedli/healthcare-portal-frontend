@@ -152,7 +152,7 @@ export default function StudentHeader({ activeMenu: any }) {
                 </span>
               </Link>
               <Link to="/" className="navbar-brand logo">
-                <img src={logo} className="img-fluid" alt="Logo" />
+                {/* <img src={logo} className="img-fluid" alt="Logo" /> */}
               </Link>
             </div>
             <div className="main-menu-wrapper">

@@ -28,12 +28,13 @@ interface UserData {
   role: String;
   phoneNumber: String;
   birthday: String;
+  image: File;
 }
 
 // eslint-disable-next-line react/prop-types
 export default function UserSideBar({ activeMenu }: { activeMenu: string }) {
   const [userData, setUserData] = useState<UserData>();
-
+  const [imgSrc, setImgSrc] = useState<string>();
   useEffect(() => {
     getUserData();
   }, []);
@@ -44,6 +45,9 @@ export default function UserSideBar({ activeMenu }: { activeMenu: string }) {
       const response = await getUser(userId);
       if (response.status == 200) {
         setUserData(response.data);
+
+        console.log("Base64Image", response.data.image);
+        setImgSrc(`data:image/png;base64,${response.data.image}`);
       }
     } catch (error) {
       console.log("Error getting user data", error);
@@ -57,10 +61,9 @@ export default function UserSideBar({ activeMenu }: { activeMenu: string }) {
       <div className="settings-widget dash-profile mb-3">
         <div className="settings-menu p-0">
           <div className="profile-bg">
-            <img src={userimage} alt="" />
             <div className="profile-img">
               <Link to="/students-profile">
-                <img src={userimage} alt="" />
+                <img src={imgSrc} alt="" />
               </Link>
             </div>
           </div>

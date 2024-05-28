@@ -15,4 +15,4 @@ export const updateUser = (userId: any, user: any) =>
   axios.put("auth/update_user/" + userId, user);
 
 export const uploadImage = (username: string, image: File | null) =>
-  axios.post("auth/iamge_upload");
+  axios.post("auth/image_upload");

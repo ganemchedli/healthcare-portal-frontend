@@ -1,8 +1,7 @@
-import React, { useState, FormEvent } from "react";
-import axios from "../../config/axios";
+import React, { useState } from "react";
 import "./signupform.css";
 import { useNavigate } from "react-router-dom";
-import { register, uploadImage } from "../../services/AuthServices";
+import { register } from "../../services/AuthServices";
 
 const SignupForm: React.FC = () => {
   //ui states
@@ -11,6 +10,7 @@ const SignupForm: React.FC = () => {
   const [confirmPassword, setConfirmPassword] = useState<string>("");
   const [firstname, setFirstName] = useState<string>("");
   const [lastname, setLastName] = useState<string>("");
+  const [gender, setGender] = useState<string>("");
   const [state, setState] = useState<string>("");
   const [role, setRole] = useState<string>("");
   const [city, setCity] = useState<string>("");
@@ -28,33 +28,34 @@ const SignupForm: React.FC = () => {
     navigate("/"); // Redirect to the sign-up page
   };
 
-  const handleSubmit = async (event: FormEvent) => {
+  const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    // Prepare the data to send to the backend
-    const data = {
-      firstName: firstname,
-      lastName: lastname,
-      email: email,
-      password: password,
-      role: role,
-      state: state,
-      city: city,
-      zipCode: zipCode,
-      address: address,
-      phoneNumber: phoneNumber,
-      birthday: birthday,
-      image: image,
-    };
 
-    // const imageData = {
-    //   username: firstname,
-    //   image: image,
-    // };
+    const formData = new FormData();
+
+    formData.append("firstName", firstname);
+    formData.append("lastName", lastname);
+    formData.append("gender", gender);
+    formData.append("email", email);
+    formData.append("password", password);
+    formData.append("role", role);
+    formData.append("state", state);
+    formData.append("city", city);
+    formData.append("zipCode", String(zipCode));
+    formData.append("address", address);
+    formData.append("phoneNumber", String(phoneNumber));
+    formData.append(
+      "birthday",
+      birthday ? birthday.toISOString().split("T")[0] : ""
+    );
+
+    formData.append("image", image as Blob);
 
     try {
       // Send a POST request to your Spring Boot backend
       if (password === confirmPassword && image) {
-        const response = await register(data);
+        console.log("Form data : ", formData);
+        const response = await register(formData);
 
         // Check if the request was successful
         if (response.status == 200) {
@@ -66,12 +67,6 @@ const SignupForm: React.FC = () => {
     } catch (error) {
       // Handle any errors that occur during the fetch operation
       console.error("Sign up failed:", error);
-    }
-  };
-
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      setImage(e.target.files[0]);
     }
   };
 
@@ -98,32 +93,35 @@ const SignupForm: React.FC = () => {
               method="POST"
               className="row g-3"
             >
-              <div className="col-12">
-                <label htmlFor="firstname" className="form-label">
-                  Firstname
-                </label>
-                <input
-                  type="text"
-                  className="form-control"
-                  id="firstname"
-                  placeholder=""
-                  onChange={(e) => setFirstName(e.target.value)}
-                  required
-                />
+              <div className="d-flex justify-content-between">
+                <div className="col-5">
+                  <label htmlFor="firstname" className="form-label">
+                    Firstname
+                  </label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="firstname"
+                    placeholder=""
+                    onChange={(e) => setFirstName(e.target.value)}
+                    required
+                  />
+                </div>
+                <div className="col-5">
+                  <label htmlFor="lastname" className="form-label">
+                    Lastname
+                  </label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="lastname"
+                    placeholder=""
+                    onChange={(e) => setLastName(e.target.value)}
+                    required
+                  />
+                </div>
               </div>
-              <div className="col-12">
-                <label htmlFor="lastname" className="form-label">
-                  Lastname
-                </label>
-                <input
-                  type="text"
-                  className="form-control"
-                  id="lastname"
-                  placeholder=""
-                  onChange={(e) => setLastName(e.target.value)}
-                  required
-                />
-              </div>
+
               <div className="col-12">
                 <label htmlFor="email" className="form-label">
                   Email
@@ -145,7 +143,7 @@ const SignupForm: React.FC = () => {
                   type="text"
                   className="form-control"
                   id="address"
-                  placeholder="City"
+                  placeholder="Street address of P.O box"
                   onChange={(e) => setAddress(e.target.value)}
                   required
                 />
@@ -163,19 +161,35 @@ const SignupForm: React.FC = () => {
                   required
                 />
               </div>
-              <div className="col-12">
-                <label htmlFor="birthday" className="form-label">
-                  Birthday
-                </label>
-                <input
-                  type="date"
-                  className="form-control"
-                  id="birthday"
-                  placeholder="City"
-                  onChange={(e) => setBirthDay(new Date(e.target.value))}
-                  required
-                />
+              <div className="d-flex justify-content-between">
+                <div className="col-5">
+                  <label htmlFor="birthday" className="form-label">
+                    Birthday
+                  </label>
+                  <input
+                    type="date"
+                    className="form-control"
+                    id="birthday"
+                    placeholder="City"
+                    onChange={(e) => setBirthDay(new Date(e.target.value))}
+                    required
+                  />
+                </div>
+                <div className="col-5">
+                  <label htmlFor="gender" className="form-label">
+                    Gender
+                  </label>
+                  <input
+                    type="select"
+                    className="form-control"
+                    id="gender"
+                    placeholder="Male of female"
+                    onChange={(e) => setGender(e.target.value)}
+                    required
+                  />
+                </div>
               </div>
+
               <div className="col-12">
                 <label htmlFor="password" className="form-label">
                   Password
@@ -201,7 +215,7 @@ const SignupForm: React.FC = () => {
                 />
               </div>
 
-              <div className="col-md-6">
+              <div className="col-md-5">
                 <label htmlFor="city" className="form-label">
                   City
                 </label>
@@ -225,7 +239,7 @@ const SignupForm: React.FC = () => {
                   required
                 />
               </div>
-              <div className="col-md-2">
+              <div className="col-md-3">
                 <label htmlFor="zipCode" className="form-label">
                   Zip
                 </label>
@@ -237,9 +251,9 @@ const SignupForm: React.FC = () => {
                   required
                 />
               </div>
-              <div className="col">
+              <div className="col-12">
                 <select
-                  className="form-select custom-select-width"
+                  className="form-select"
                   onChange={(e) => setRole(e.target.value)}
                   value="1"
                   required
@@ -256,7 +270,10 @@ const SignupForm: React.FC = () => {
                 <input
                   type="file"
                   accept="image/*"
-                  onChange={handleImageChange}
+                  className="form-control"
+                  onChange={(e) =>
+                    setImage(e.target.files ? e.target.files[0] : null)
+                  }
                   required
                 />
               </div>

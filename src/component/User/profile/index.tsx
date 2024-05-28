@@ -10,6 +10,7 @@ import { getUser } from "../../../services/UserServices";
 import axios from "../../../config/axios";
 
 interface UserData {
+  id: Number;
   firstName: String;
   lastName: String;
   password: String;
@@ -18,12 +19,33 @@ interface UserData {
   city: String;
   zipCode: Number;
   role: String;
-  phoneNumber: String;
+  phoneNumber: Number;
   birthday: String;
+  image: ImageBitmap;
 }
 
 export default function UserEditProfile() {
-  const [setCountry] = useState(null);
+  // //ui states
+  // const [id, setId] = useState<Number>();
+  // const [email, setEmail] = useState<string>("");
+  // const [password, setPassword] = useState<string>("");
+  // const [confirmPassword, setConfirmPassword] = useState<string>("");
+  // const [firstname, setFirstName] = useState<string>("");
+  // const [lastname, setLastName] = useState<string>("");
+  // const [gender, setGender] = useState<string>("");
+  // const [state, setState] = useState<string>("");
+  // const [role, setRole] = useState<string>("");
+  // const [city, setCity] = useState<string>("");
+  // const [address, setAddress] = useState<string>("");
+  // const [zipCode, setZipCode] = useState<number>();
+  // const [phoneNumber, setPhoneNumber] = useState<number>();
+  // const [birthday, setBirthDay] = useState<Date>();
+  // // file upload state
+  // const [image, setImage] = useState<File | null>(null);
+
+  const [country, setCountry] = useState<any>();
+
+  const [userData, setUserData] = useState<UserData>();
 
   const options = [
     { label: "Select Country", value: "Country" },
@@ -31,6 +53,35 @@ export default function UserEditProfile() {
     { label: "America", value: "America" },
     { label: "London", value: "London" },
   ];
+
+  const id = localStorage.getItem("id");
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = async () => {
+    try {
+      const response = await getUser(id);
+
+      if (response?.status == 200) {
+        setUserData(response.data);
+
+        console.log("User Data", userData);
+      }
+    } catch (error) {
+      console.log("Could not fetch data", error);
+    }
+  };
+
+  // const handleUpdateButton = async(userData: any, userId: any) => {
+  //   try {
+  //     const response = a;
+  //   } catch (error) {
+  //     console.log("User is not updated", error);
+  //   }
+  // };
+
   const style = {
     control: (baseStyles, state) => ({
       ...baseStyles,
@@ -73,13 +124,12 @@ export default function UserEditProfile() {
       transition: "250ms",
     }),
   };
-
   return (
     <div className="main-wrapper">
-      {/* <StudentHeader activeMenu={"Profile"} /> */}
+      <StudentHeader activeMenu={"Profile"} />
       {/* Student Dashboard */}
       <div className="page-content">
-        <div className="container">
+        <div className="container pt-5">
           <div className="row">
             {/* Sidebar */}
             <UserSideBar activeMenu="EditProfile" />
@@ -102,7 +152,7 @@ export default function UserEditProfile() {
                       </Link>
                       <div className="course-name">
                         <h4>
-                          <Link to="/students-profile">Your avatar</Link>
+                          <Link to="">Your avatar</Link>
                         </h4>
                         <p>PNG or JPG no bigger than 800px wide and tall.</p>
                       </div>
