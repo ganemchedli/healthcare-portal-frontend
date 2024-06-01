@@ -6,3 +6,6 @@ export const register = (formData: FormData) =>
       "Content-Type": "multipart/form-data",
     },
   });
+
+export const authenticate = async (data: any) =>
+  axios.post("auth/authenticate", data);

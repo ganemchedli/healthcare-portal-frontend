@@ -1,5 +1,5 @@
 import { useState, FormEvent } from "react";
-import axios from "../../config/axios";
+import { authenticate } from "../../services/AuthServices";
 import "./loginform.css";
 import { useNavigate } from "react-router-dom";
 
@@ -19,7 +19,7 @@ const LoginForm: React.FC = () => {
 
     try {
       // Send a POST request to your Spring Boot backend
-      const response = await axios.post("auth/authenticate", data);
+      const response = await authenticate(data);
 
       // Check if the request was successful
       if (response.status) {

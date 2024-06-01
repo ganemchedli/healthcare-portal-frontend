@@ -11,8 +11,12 @@ export const createUser = (user: any) => axios.post("auth/create_user", user);
 export const deleteUser = (userId: any) =>
   axios.delete("auth/delete_user/" + userId);
 
-export const updateUser = (userId: any, user: any) =>
-  axios.put("auth/update_user/" + userId, user);
+export const updateUser = (id: any, updatedFields: any) =>
+  axios.put("auth/update_user/" + id, updatedFields);
 
-export const uploadImage = (username: string, image: File | null) =>
-  axios.post("auth/image_upload");
+export const updateUserImage = (id: any, formData: FormData) =>
+  axios.put("auth/update_image/" + id, formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });

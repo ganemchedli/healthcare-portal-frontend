@@ -1,87 +1,142 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, ChangeEvent } from "react";
 import StudentHeader from "../header";
 import Footer from "../../footer";
-import { User11 } from "../../imagepath";
 import { Link } from "react-router-dom";
 import UserSideBar from "../sidebar";
-import Select from "react-select";
-import { jwtDecode } from "jwt-decode";
-import { getUser } from "../../../services/UserServices";
-import axios from "../../../config/axios";
+import {
+  getUser,
+  updateUser,
+  updateUserImage,
+} from "../../../services/UserServices";
 
 interface UserData {
-  id: Number;
-  firstName: String;
-  lastName: String;
-  password: String;
-  address: String;
-  state: String;
-  city: String;
-  zipCode: Number;
-  role: String;
-  phoneNumber: Number;
-  birthday: String;
-  image: ImageBitmap;
+  id: number;
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+  address: string;
+  state: string;
+  city: string;
+  zipCode: number;
+  role: string;
+  phoneNumber: string;
+  birthday: string;
+  image: File;
 }
 
-export default function UserEditProfile() {
-  // //ui states
-  // const [id, setId] = useState<Number>();
-  // const [email, setEmail] = useState<string>("");
-  // const [password, setPassword] = useState<string>("");
-  // const [confirmPassword, setConfirmPassword] = useState<string>("");
-  // const [firstname, setFirstName] = useState<string>("");
-  // const [lastname, setLastName] = useState<string>("");
-  // const [gender, setGender] = useState<string>("");
-  // const [state, setState] = useState<string>("");
-  // const [role, setRole] = useState<string>("");
-  // const [city, setCity] = useState<string>("");
-  // const [address, setAddress] = useState<string>("");
-  // const [zipCode, setZipCode] = useState<number>();
-  // const [phoneNumber, setPhoneNumber] = useState<number>();
-  // const [birthday, setBirthDay] = useState<Date>();
-  // // file upload state
-  // const [image, setImage] = useState<File | null>(null);
+type UserFormProps = {
+  userData: UserData;
+};
 
-  const [country, setCountry] = useState<any>();
-
-  const [userData, setUserData] = useState<UserData>();
-
-  const options = [
-    { label: "Select Country", value: "Country" },
-    { label: "India", value: "India" },
-    { label: "America", value: "America" },
-    { label: "London", value: "London" },
-  ];
-
-  const id = localStorage.getItem("id");
+const UserEditProfile: React.FC<{}> = ({}) => {
+  //state for managing user data
+  const [userData, setUserData] = useState<UserData>({
+    id: 0,
+    firstName: "",
+    lastName: "",
+    email: "",
+    password: "",
+    address: "",
+    state: "",
+    city: "",
+    zipCode: 0,
+    role: "",
+    phoneNumber: "",
+    birthday: "",
+    image: new File([], ""),
+  });
+  //state for managing image source
+  const [imgSrc, setImgSrc] = useState<string>();
 
   useEffect(() => {
-    fetchData();
+    const userId = localStorage.getItem("userId");
+    if (userId) {
+      getUser(userId)
+        .then((response) => {
+          setUserData(response.data);
+          setImgSrc(`data:image/png;base64,${response.data.image}`);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    }
   }, []);
 
-  const fetchData = async () => {
-    try {
-      const response = await getUser(id);
+  //console.log("user data", userData); // Display user data
 
-      if (response?.status == 200) {
-        setUserData(response.data);
+  const handleChange = (e: any) => {
+    const { name, value } = e.target;
+    setUserData({
+      ...userData,
+      [name]: value,
+    });
+  };
 
-        console.log("User Data", userData);
-      }
-    } catch (error) {
-      console.log("Could not fetch data", error);
+  const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const selectedFile = e.target.files[0];
+      console.log("Selected file", selectedFile);
+      setUserData({ ...userData, image: selectedFile });
     }
   };
 
-  // const handleUpdateButton = async(userData: any, userId: any) => {
-  //   try {
-  //     const response = a;
-  //   } catch (error) {
-  //     console.log("User is not updated", error);
-  //   }
-  // };
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const updatedFields: Partial<UserData> = {};
 
+    // Iterate over each key in formData
+    Object.keys(userData).forEach((key) => {
+      const typedKey = key as keyof UserData;
+      // Ensure types are correct
+      switch (typedKey) {
+        case "id":
+        case "zipCode":
+          updatedFields[typedKey] = Number(userData[typedKey]);
+          break;
+        case "image":
+          updatedFields[typedKey] = userData[typedKey] as File;
+          break;
+        default:
+          updatedFields[typedKey] = userData[typedKey] as string;
+          break;
+      }
+    });
+
+    console.log("Updated fields", updatedFields);
+    // Check if there are any updated fields
+    if (Object.keys(updatedFields).length > 0) {
+      updateUserData(updatedFields);
+    } else {
+      console.log("No changes detected");
+    }
+  };
+
+  const updateUserData = async (updatedFields: Partial<UserData>) => {
+    try {
+      const response = await updateUser(userData.id, updatedFields);
+      if (response.status === 200) {
+        console.log("Update successful:", response.data);
+      }
+    } catch (error) {
+      console.error("Error updating user data:", error);
+    }
+  };
+
+  const updateUserProfileImage = async () => {
+    const formData = new FormData();
+    formData.append("image", userData.image as Blob);
+
+    try {
+      const response = await updateUserImage(userData.id, formData);
+      if (response.status === 200) {
+        console.log("Image uploaded successfully");
+      }
+      window.location.reload();
+    } catch (error) {
+      console.log("Error uploading image", error);
+    }
+  };
   const style = {
     control: (baseStyles, state) => ({
       ...baseStyles,
@@ -132,7 +187,19 @@ export default function UserEditProfile() {
         <div className="container pt-5">
           <div className="row">
             {/* Sidebar */}
-            <UserSideBar activeMenu="EditProfile" />
+            <UserSideBar
+              image={imgSrc ? imgSrc : ""}
+              firstName={userData.firstName}
+              role={userData.role}
+              lastName={userData.lastName}
+              password={userData.password}
+              address={userData.address}
+              state={userData.state}
+              city={userData.city}
+              zipCode={userData.zipCode}
+              phoneNumber={userData.phoneNumber}
+              birthday={userData.birthday}
+            />
             {/* Sidebar */}
 
             {/* Profile Details */}
@@ -147,18 +214,27 @@ export default function UserEditProfile() {
                   </div>
                   <div className="course-group mb-0 d-flex">
                     <div className="course-group-img d-flex align-items-center">
-                      <Link to="/students-profile">
-                        <img src="" alt="" className="img-fluid" />
-                      </Link>
                       <div className="course-name">
                         <h4>
                           <Link to="">Your avatar</Link>
                         </h4>
+                        <input
+                          type="file"
+                          accept="image/*"
+                          name="image"
+                          onChange={handleImageChange}
+                          className="form-control"
+                          required
+                        />
                         <p>PNG or JPG no bigger than 800px wide and tall.</p>
                       </div>
                     </div>
                     <div className="profile-share d-flex align-items-center justify-content-center">
-                      <Link to="#;" className="btn btn-success">
+                      <Link
+                        to="#;"
+                        className="btn btn-success"
+                        onClick={updateUserProfileImage}
+                      >
                         Update
                       </Link>
                       <Link to="#;" className="btn btn-danger">
@@ -171,7 +247,11 @@ export default function UserEditProfile() {
                       <h4>Personal Details</h4>
                       <p>Edit your personal information and address.</p>
                     </div>
-                    <form action="#">
+                    <form
+                      action="#"
+                      method="PUT"
+                      onSubmit={(e) => handleSubmit(e)}
+                    >
                       <div className="row">
                         <div className="col-lg-6">
                           <div className="form-group">
@@ -181,7 +261,10 @@ export default function UserEditProfile() {
                             <input
                               type="text"
                               className="form-control"
+                              name="firstName"
                               placeholder="Enter your first Name"
+                              value={userData.firstName}
+                              onChange={handleChange}
                             />
                           </div>
                         </div>
@@ -193,7 +276,10 @@ export default function UserEditProfile() {
                             <input
                               type="text"
                               className="form-control"
+                              name="lastName"
                               placeholder="Enter your last Name"
+                              value={userData.lastName}
+                              onChange={handleChange}
                             />
                           </div>
                         </div>
@@ -203,7 +289,10 @@ export default function UserEditProfile() {
                             <input
                               type="text"
                               className="form-control"
+                              name="phoneNumber"
                               placeholder="Enter your Phone"
+                              value={userData.phoneNumber}
+                              onChange={handleChange}
                             />
                           </div>
                         </div>
@@ -213,7 +302,10 @@ export default function UserEditProfile() {
                             <input
                               type="text"
                               className="form-control"
+                              name="email"
                               placeholder="Enter your Email"
+                              value={userData.email}
+                              onChange={handleChange}
                             />
                           </div>
                         </div>
@@ -223,25 +315,26 @@ export default function UserEditProfile() {
                               Birthday
                             </label>
                             <input
-                              type="text"
+                              type="date"
                               className="form-control"
+                              name="birthday"
                               placeholder="Birth of Date"
+                              value={userData.birthday}
+                              onChange={handleChange}
                             />
                           </div>
                         </div>
                         <div className="col-lg-6">
                           <div className="form-group">
-                            <label className="form-label">Country</label>
-
-                            <Select
-                              className=" select country-select"
-                              name="sellist1"
-                              options={options}
-                              defaultValue={options[0]}
-                              placeholder="Select Country"
-                              onChange={setCountry}
-                              styles={style}
-                            ></Select>
+                            <label className="form-label">State</label>
+                            <input
+                              type="text"
+                              className="form-control"
+                              name="state"
+                              placeholder="Enter your State"
+                              value={userData.state}
+                              onChange={handleChange}
+                            />
                           </div>
                         </div>
                         <div className="col-lg-6">
@@ -252,11 +345,14 @@ export default function UserEditProfile() {
                             <input
                               type="text"
                               className="form-control"
+                              name="address"
                               placeholder="Address"
+                              value={userData.address}
+                              onChange={handleChange}
                             />
                           </div>
                         </div>
-                        <div className="col-lg-6">
+                        {/* <div className="col-lg-6">
                           <div className="form-group">
                             <label className="form-control-label">
                               Address Line 2 (Optional)
@@ -267,14 +363,17 @@ export default function UserEditProfile() {
                               placeholder="Address"
                             />
                           </div>
-                        </div>
+                        </div> */}
                         <div className="col-lg-6">
                           <div className="form-group">
                             <label className="form-control-label">City</label>
                             <input
                               type="text"
                               className="form-control"
+                              name="city"
                               placeholder="Enter your City"
+                              value={userData.city}
+                              onChange={handleChange}
                             />
                           </div>
                         </div>
@@ -286,12 +385,15 @@ export default function UserEditProfile() {
                             <input
                               type="text"
                               className="form-control"
+                              name="zipCode"
                               placeholder="Enter your Zipcode"
+                              value={userData.zipCode}
+                              onChange={handleChange}
                             />
                           </div>
                         </div>
                         <div className="update-profile">
-                          <button type="button" className="btn btn-success">
+                          <button type="submit" className="btn btn-success">
                             Update Profile
                           </button>
                         </div>
@@ -309,4 +411,6 @@ export default function UserEditProfile() {
       {/* <Footer /> */}
     </div>
   );
-}
+};
+
+export default UserEditProfile;

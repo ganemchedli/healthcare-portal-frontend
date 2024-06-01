@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { createUser, getUser, updateUser } from "../services/UserServices";
 import { useNavigate, useParams } from "react-router-dom";
 
-
 const UserComponent = () => {
   const [firstName, setFirstName] = useState<string>("");
   const [lastName, setLastName] = useState<string>("");
@@ -56,7 +55,7 @@ const UserComponent = () => {
     }
   }, [id]);
 
-  function saveOrUpdateUser(e: any) {
+  const saveOrUpdateUser = (e: any) => {
     e.preventDefault();
     console.log("validateForm value", validateForm());
     const user = {
@@ -93,7 +92,7 @@ const UserComponent = () => {
           });
       }
     }
-  }
+  };
 
   function validateForm() {
     let valid = true;
