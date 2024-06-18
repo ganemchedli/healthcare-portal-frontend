@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import { createUser, getUser, updateUser } from "../services/UserServices";
 import { useNavigate, useParams } from "react-router-dom";
+import SidebarAdmin from "./sidebarAdmin";
 
-const UserComponent = () => {
+const UserComponent: React.FC = () => {
   const [firstName, setFirstName] = useState<string>("");
   const [lastName, setLastName] = useState<string>("");
   const [email, setEmail] = useState<string>("");

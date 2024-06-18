@@ -181,7 +181,6 @@ const UserEditProfile: React.FC<{}> = ({}) => {
   };
   return (
     <div className="main-wrapper">
-      <StudentHeader activeMenu={"Profile"} />
       {/* Student Dashboard */}
       <div className="page-content">
         <div className="container pt-5">

@@ -17,7 +17,7 @@ interface User {
   role: string;
 }
 
-const ListUsersComponent = () => {
+const ListUsersComponent: React.FC = () => {
   const [users, setUsers] = useState<User[]>([]);
 
   useEffect(() => {
