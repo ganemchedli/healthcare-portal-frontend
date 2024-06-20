@@ -3,6 +3,8 @@ import { authenticate } from "../../services/AuthServices";
 import "./loginform.css";
 import { useNavigate } from "react-router-dom";
 
+import { jwtDecode } from "jwt-decode";
+
 const LoginForm: React.FC = () => {
   const [email, setemail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
@@ -30,9 +32,26 @@ const LoginForm: React.FC = () => {
         localStorage.setItem("token", token);
         localStorage.setItem("userId", response.data.id);
         localStorage.setItem("User email", response.data.email);
+        localStorage.setItem("User role", response.data.role);
         // Handle successful login (redirect, update state, etc.)
         console.log("Login successful");
-        navigate("/profile");
+        console.log("Response data", response.data);
+        switch (response.data.role) {
+          case "ADMIN":
+            navigate("/admin/users");
+            break;
+          case "PAIENT":
+            navigate("/profile");
+            break;
+          case "DOCTOR":
+            navigate("/ehr");
+            break;
+          case "NURSE":
+            navigate("/ehr");
+            break;
+          default:
+            navigate("/login");
+        }
       }
     } catch (error) {
       // Handle any errors that occur during the fetch operation
@@ -64,7 +83,7 @@ const LoginForm: React.FC = () => {
             <form onSubmit={handleSubmit} action="#" method="POST">
               <div className="mb-3">
                 <label className="form-label" htmlFor="email">
-                  Email:
+                  Email or username:
                 </label>
                 <input
                   className="form-control"

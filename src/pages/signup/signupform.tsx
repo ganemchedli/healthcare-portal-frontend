@@ -258,7 +258,6 @@ const SignupForm: React.FC = () => {
                   value="1"
                   required
                 >
-                  <option selected>Select you role</option>
                   <option value="PATIENT">Patient</option>
                   <option value="DOCTOR">Doctor</option>
                   <option value="NURSE">Nurse</option>

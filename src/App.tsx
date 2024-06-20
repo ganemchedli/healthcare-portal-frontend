@@ -17,7 +17,7 @@ import LoginForm from "./pages/login/loginform";
 import SignUpForm from "./pages/signup/signupform";
 import Admin from "./pages/admin/admin";
 import UserComponent from "./component/UserComponent";
-import ListUsersComponent from "./component/ListUsersComponent";
+import ListUsersComponent from "./component/listUsersComponent";
 import Profile from "./component/User/profile";
 
 function App() {
@@ -26,7 +26,6 @@ function App() {
       <Routes>
         <Route path="/" element={<LoginForm />} />
         <Route path="/signup" element={<SignUpForm />} />
-        <Route path="/admin" element={<Admin />}></Route>
         <Route path="/add-user" element={<UserComponent />} />
         <Route path="/update-user/:id" element={<UserComponent />} />
         <Route path="/profile" element={<Profile />} />

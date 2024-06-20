@@ -1,0 +1,9 @@
+/* Resize the text size of table headers */
+.table th {
+  font-size: 14px; /* Adjust this value as needed */
+}
+
+/* Resize the text size of table data cells */
+.table td {
+  font-size: 12px; /* Adjust this value as needed */
+}

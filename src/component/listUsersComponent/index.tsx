@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react";
-import { deleteUser, listUsers } from "../services/UserServices";
+import { deleteUser, listUsers } from "../../services/UserServices";
 import { useNavigate } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPenToSquare, faTrash } from "@fortawesome/free-solid-svg-icons";
 
+import "./index.css";
 interface User {
   id: number;
   firstName: string;
@@ -55,7 +58,7 @@ const ListUsersComponent: React.FC = () => {
 
   return (
     <div className="container">
-      <h2 className="">List of users</h2>
+      <h2 className="">Manage users</h2>
       <div className="text-end">
         <button className="btn btn-primary mb-2" onClick={addNewUser}>
           Add User
@@ -92,17 +95,21 @@ const ListUsersComponent: React.FC = () => {
 
               <td>
                 <button
-                  className="btn btn-info"
+                  //   className="btn btn-info"
                   onClick={() => updateUser(user.id)}
                 >
-                  <i className="bi bi-pencil-square"></i>
+                  <span>
+                    <FontAwesomeIcon icon={faPenToSquare} />
+                  </span>
                 </button>
                 <button
-                  className="btn btn-danger"
+                  //   className="btn btn-danger"
                   onClick={() => removeUser(user.id)}
                   style={{ marginLeft: "10px" }}
                 >
-                  <i className="bi bi-trash"></i>
+                  <span>
+                    <FontAwesomeIcon icon={faTrash} />
+                  </span>
                 </button>
               </td>
             </tr>
