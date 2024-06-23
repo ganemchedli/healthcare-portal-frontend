@@ -16,7 +16,8 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import LoginForm from "./pages/login/loginform";
 import SignUpForm from "./pages/signup/signupform";
 import Admin from "./pages/admin/admin";
-import UserComponent from "./component/UserComponent";
+import AddUserComponent from "./component/addUser";
+import UpdateUserComponent from "./component/updateUser";
 import ListUsersComponent from "./component/listUsersComponent";
 import Profile from "./component/User/profile";
 
@@ -26,8 +27,8 @@ function App() {
       <Routes>
         <Route path="/" element={<LoginForm />} />
         <Route path="/signup" element={<SignUpForm />} />
-        <Route path="/add-user" element={<UserComponent />} />
-        <Route path="/update-user/:id" element={<UserComponent />} />
+        <Route path="/add-user" element={<AddUserComponent />} />
+        <Route path="/update-user/:id" element={<UpdateUserComponent />} />
         <Route path="/profile" element={<Profile />} />
       </Routes>
       <Routes>

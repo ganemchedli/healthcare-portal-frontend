@@ -3,7 +3,9 @@ import { deleteUser, listUsers } from "../../services/UserServices";
 import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare, faTrash } from "@fortawesome/free-solid-svg-icons";
-
+import ModalComponent from "../modal"; // adjust the path as necessary
+import AddUserComponent from "../addUser";
+import UpdateUserComponent from "../updateUser";
 import "./index.css";
 interface User {
   id: number;
@@ -22,12 +24,23 @@ interface User {
 
 const ListUsersComponent: React.FC = () => {
   const [users, setUsers] = useState<User[]>([]);
+  const [modalContent, setModalContent] = useState<React.ReactNode | null>(
+    null
+  );
+
+  const navigator = useNavigate();
 
   useEffect(() => {
     getAllUsers();
   }, []);
 
-  const navigator = useNavigate();
+  const openModalWithComponent = (component: React.ReactNode) => {
+    setModalContent(component);
+  };
+
+  const closeModal = () => {
+    setModalContent(null);
+  };
 
   function getAllUsers() {
     listUsers()
@@ -37,13 +50,13 @@ const ListUsersComponent: React.FC = () => {
       .catch((error) => console.log(error));
   }
 
-  function addNewUser() {
-    navigator("/add-user");
-  }
+  // function addNewUser() {
+  //   navigator("/add-user");
+  // }
 
-  function updateUser(id: any) {
-    navigator(`/update-user/${id}`);
-  }
+  // function updateUser(id: any) {
+  //   navigator(`/update-user/${id}`);
+  // }
 
   function removeUser(id: any) {
     console.log(id);
@@ -57,12 +70,24 @@ const ListUsersComponent: React.FC = () => {
   }
 
   return (
-    <div className="container">
+    <div className={`container ${modalContent ? "blur-background" : ""}`}>
       <h2 className="">Manage users</h2>
       <div className="text-end">
-        <button className="btn btn-primary mb-2" onClick={addNewUser}>
+        {/* <button className="btn btn-primary mb-2" onClick={openModal}>
           Add User
+        </button> */}
+        <button
+          className=""
+          onClick={() => openModalWithComponent(<AddUserComponent />)}
+        >
+          Add user
         </button>
+        <ModalComponent
+          isOpen={modalContent !== null}
+          onRequestClose={closeModal}
+        >
+          {modalContent}
+        </ModalComponent>
       </div>
       <table className="table table-striped table-bordred">
         <thead>
@@ -95,13 +120,31 @@ const ListUsersComponent: React.FC = () => {
 
               <td>
                 <button
-                  //   className="btn btn-info"
-                  onClick={() => updateUser(user.id)}
+                  onClick={() =>
+                    openModalWithComponent(<UpdateUserComponent id={user.id} />)
+                  }
                 >
                   <span>
                     <FontAwesomeIcon icon={faPenToSquare} />
                   </span>
                 </button>
+                <ModalComponent
+                  isOpen={modalContent !== null}
+                  onRequestClose={closeModal}
+                >
+                  {modalContent}
+                </ModalComponent>
+                {/* <button onClick={openModal}>
+                  <span>
+                    <FontAwesomeIcon icon={faPenToSquare} />
+                  </span>
+                </button>
+                <ModalComponent
+                  isOpen={modalIsOpen}
+                  onRequestClose={closeModal}
+                >
+                  <UpdateUserComponent id={user.id} />
+                </ModalComponent> */}
                 <button
                   //   className="btn btn-danger"
                   onClick={() => removeUser(user.id)}

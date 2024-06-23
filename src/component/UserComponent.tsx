@@ -3,7 +3,11 @@ import { createUser, getUser, updateUser } from "../services/UserServices";
 import { useNavigate, useParams } from "react-router-dom";
 import SidebarAdmin from "./sidebarAdmin";
 
-const UserComponent: React.FC = () => {
+interface UserComponentProps {
+  id: number | undefined;
+}
+
+const UserComponent: React.FC<UserComponentProps> = (id) => {
   const [firstName, setFirstName] = useState<string>("");
   const [lastName, setLastName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
@@ -17,7 +21,7 @@ const UserComponent: React.FC = () => {
   const [phoneNumber, setPhoneNumber] = useState<number>();
   const [birthday, setBirthDay] = useState<string>("");
 
-  const { id } = useParams();
+  // const { id } = useParams();
 
   const [errors, setErrors] = useState({
     firstName: "",

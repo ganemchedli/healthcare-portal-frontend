@@ -63,7 +63,7 @@ const SidebarAdmin: React.FC<SidebarProps> = () => {
           >
             <a href="#" className="text-decoration-none px-3 py-2 d-block">
               <FontAwesomeIcon icon={faGear} />{" "}
-              <RouterNavLink to="/admin/settings">Settings</RouterNavLink>
+              <RouterNavLink to="/admin/profile">Settings</RouterNavLink>
             </a>
           </li>
         </ul>
