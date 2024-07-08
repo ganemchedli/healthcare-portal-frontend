@@ -17,7 +17,7 @@ import ListOfPatients from "./component/listofpatients";
 import Doctor from "./pages/doctor/doctor";
 import ElectronicMedicalRecordComponent from "./component/electronicmedicalrecord";
 import AppointmentComponent from "./component/appointment";
-import MessagesComponent from "./component/messages";
+import MessagesComponent from "./component/messaging";
 
 function App() {
   // State to manage the visibility of the sidebar
@@ -47,12 +47,7 @@ function App() {
         </Route>
       </Routes>
       <Routes>
-        <Route path="/doctor" element={<Doctor />}>
-          <Route path="listofpatients" element={<ListOfPatients />} />
-          <Route path="emr" element={<ElectronicMedicalRecordComponent />} />
-          <Route path="appointments" element={<AppointmentComponent />} />
-          <Route path="messages" element={<MessagesComponent />} />
-        </Route>
+        <Route path="/doctor" element={<Doctor />} />
       </Routes>
     </Router>
   );
