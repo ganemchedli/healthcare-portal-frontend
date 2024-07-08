@@ -1,0 +1,55 @@
+.sidebar-full {
+  width: 250px;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: #f4f4f4;
+  transition: left 0.3s ease;
+  z-index: 1000;
+}
+
+.sidebar-mini {
+  width: 50px;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: #ddd;
+  transition: left 0.3s ease;
+  z-index: 1000;
+}
+
+.sidebar-button {
+  margin: 10px;
+}
+
+.sidebar-button-mini {
+  margin: 10px;
+  width: 40px;
+  height: 40px;
+}
+
+.user-image-container {
+  width: 100px; /* Adjust size as needed */
+  height: 100px; /* Adjust size as needed */
+  border-radius: 50%; /* Makes the container circular */
+  overflow: hidden; /* Hides parts of the image that exceed the container */
+  margin: 10px auto; /* Center the image horizontally */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.user-image {
+  width: 100%;
+  height: auto;
+  display: block; /* Ensures the image scales nicely within the container */
+}
+
+.pl-2 {
+  padding-left: 0.5rem;
+}
+.pl-3 {
+  padding-left: 20px;
+}

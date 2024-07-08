@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { createUser, getUser, updateUser } from "../services/UserServices";
-import { useNavigate, useParams } from "react-router-dom";
-import SidebarAdmin from "./sidebarAdmin";
+import { useNavigate } from "react-router-dom";
 
 interface UserComponentProps {
   id: number | undefined;

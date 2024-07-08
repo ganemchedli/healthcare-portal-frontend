@@ -4,14 +4,7 @@ import "./assets/css/bootstrap.min.css";
 //CSS & Bootstrap
 import "./assets/css/style.css";
 
-// import "./assets/js/bootstrap.min.js";
-
-// import "./assets/css/select2.min.css";
-
-//Font Awesome
-// import "./assets/plugins/fontawesome/css/fontawesome.min.css";
-// import "./assets/plugins/fontawesome/css/all.min.css";
-
+import { useState } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import LoginForm from "./pages/login/loginform";
 import SignUpForm from "./pages/signup/signupform";
@@ -20,8 +13,21 @@ import AddUserComponent from "./component/addUser";
 import UpdateUserComponent from "./component/updateUser";
 import ListUsersComponent from "./component/listUsersComponent";
 import Profile from "./component/User/profile";
+import ListOfPatients from "./component/listofpatients";
+import Doctor from "./pages/doctor/doctor";
+import ElectronicMedicalRecordComponent from "./component/electronicmedicalrecord";
+import AppointmentComponent from "./component/appointment";
+import MessagesComponent from "./component/messages";
 
 function App() {
+  // State to manage the visibility of the sidebar
+  const [isSidebarOpen, setSidebarOpen] = useState(true);
+
+  // Function to toggle the sidebar
+  const toggleSidebar = () => {
+    setSidebarOpen(!isSidebarOpen);
+  };
+
   return (
     <Router>
       <Routes>
@@ -39,7 +45,14 @@ function App() {
           />
           <Route path="profile" element={<Profile />} />
         </Route>
-        {/* Other routes can go here */}
+      </Routes>
+      <Routes>
+        <Route path="/doctor" element={<Doctor />}>
+          <Route path="listofpatients" element={<ListOfPatients />} />
+          <Route path="emr" element={<ElectronicMedicalRecordComponent />} />
+          <Route path="appointments" element={<AppointmentComponent />} />
+          <Route path="messages" element={<MessagesComponent />} />
+        </Route>
       </Routes>
     </Router>
   );
