@@ -1,6 +1,4 @@
 import { useState } from "react";
-import { Outlet } from "react-router-dom";
-
 import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
@@ -12,7 +10,6 @@ import {
 } from "@ant-design/icons";
 
 import { Button, Layout, Menu, theme, Avatar } from "antd";
-import ListOfPatients from "../../component/listofpatients";
 import Appointments from "../../component/appointment";
 import ElectronicMedicalRecord from "../../component/electronicmedicalrecord";
 import Messaging from "../../component/messaging";
@@ -28,7 +25,7 @@ const patientInfo: any = {
   patientImageUrl: "https://randomuser.me/api/portraits/men/29.jpg", // URL from a public API for placeholder images
 };
 
-const Doctor: React.FC<DoctorProps> = () => {
+const Patient: React.FC<DoctorProps> = () => {
   const [activeMenu, setActiveMenu] = useState("1"); // State to track active menu item
   const {
     token: { colorBgContainer, borderRadiusLG },
@@ -45,22 +42,16 @@ const Doctor: React.FC<DoctorProps> = () => {
       case "1":
         return (
           <div>
-            <ListOfPatients />
+            <ElectronicMedicalRecord patientId="123" />
           </div>
         );
       case "2":
         return (
           <div>
-            <ElectronicMedicalRecord patientId="123" />
-          </div>
-        );
-      case "3":
-        return (
-          <div>
             <Appointments />
           </div>
         );
-      case "4":
+      case "3":
         return (
           <div>
             <Messaging />
@@ -96,9 +87,9 @@ const Doctor: React.FC<DoctorProps> = () => {
           />
           {/* <Avatar src={"src/assets/photo.jpg"} size={}></Avatar> */}
           <div className="pt-4 fw-bold text-center text-white">
-            Name of the doctor
+            Name of the Patient
           </div>
-          <div className="text-center text-white">DOCTOR</div>
+          <div className="text-center text-white">Patient</div>
         </div>
         <Menu
           theme="dark"
@@ -107,27 +98,21 @@ const Doctor: React.FC<DoctorProps> = () => {
           items={[
             {
               key: "1",
-              icon: <UserOutlined />,
-              label: "List of patients",
+              icon: <FolderAddOutlined />,
+              label: "View my EMR",
               onClick: () => onMenuClick("1"),
             },
             {
               key: "2",
-              icon: <FolderAddOutlined />,
-              label: "Create a new EMR",
+              icon: <CalendarOutlined />,
+              label: "Appointments",
               onClick: () => onMenuClick("2"),
             },
             {
               key: "3",
-              icon: <CalendarOutlined />,
-              label: "Appointments",
-              onClick: () => onMenuClick("3"),
-            },
-            {
-              key: "4",
               icon: <MessageOutlined />,
               label: "Messages",
-              onClick: () => onMenuClick("4"),
+              onClick: () => onMenuClick("3 "),
             },
           ]}
           style={{ flex: 1 }} // Make the menu use available space
@@ -159,4 +144,4 @@ const Doctor: React.FC<DoctorProps> = () => {
   );
 };
 
-export default Doctor;
+export default Patient;

@@ -1,0 +1,31 @@
+.sidebar-full {
+  width: 250px;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: #f4f4f4;
+  transition: left 0.3s ease;
+  z-index: 1000;
+}
+
+.sidebar-mini {
+  width: 50px;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: #ddd;
+  transition: left 0.3s ease;
+  z-index: 1000;
+}
+
+.sidebar-button {
+  margin: 10px;
+}
+
+.sidebar-button-mini {
+  margin: 10px;
+  width: 40px;
+  height: 40px;
+}

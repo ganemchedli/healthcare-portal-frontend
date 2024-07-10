@@ -1,0 +1,41 @@
+.resizable-card-medication {
+  width: 195%; /* Fixed width */
+  height: 100%; /* Fixed height */
+}
+.resizable-card-labtest {
+  width: 316%; /* Fixed width */
+  height: 100%; /* Fixed height */
+}
+.resizable-card-medicalhistory {
+  width: 197%; /* Fixed width */
+  height: 100%; /* Fixed height */
+}
+.resizable-card-immunization {
+  width: 296%; /* Fixed width */
+  height: 100%; /* Fixed height */
+}
+.resizable-card-medication {
+  width: 195%; /* Fixed width */
+  height: 100%; /* Fixed height */
+}
+.resizable-card-clinicalnotes {
+  width: 260%; /* Fixed width */
+  height: 100%; /* Fixed height */
+}
+*/
+
+/* .container {
+  display: flex;
+  justify-content: space-around;
+  padding: 20px;
+}
+
+.flexible-card {
+  flex-grow: 3; /* Cards will grow and shrink as needed     
+  margin: 10px;
+}
+
+/* Responsive width */
+.responsive-card {
+  width: 50%; /* Adjust based on the parent container size */
+}

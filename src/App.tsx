@@ -15,6 +15,7 @@ import ListUsersComponent from "./component/listUsersComponent";
 import Profile from "./component/User/profile";
 import ListOfPatients from "./component/listofpatients";
 import Doctor from "./pages/doctor/doctor";
+import Patient from "./pages/patient/patient";
 import ElectronicMedicalRecordComponent from "./component/electronicmedicalrecord";
 import AppointmentComponent from "./component/appointment";
 import MessagesComponent from "./component/messaging";
@@ -48,6 +49,7 @@ function App() {
       </Routes>
       <Routes>
         <Route path="/doctor" element={<Doctor />} />
+        <Route path="/patient" element={<Patient />}></Route>
       </Routes>
     </Router>
   );
