@@ -16,6 +16,7 @@ import Profile from "./component/User/profile";
 import ListOfPatients from "./component/listofpatients";
 import Doctor from "./pages/doctor/doctor";
 import Patient from "./pages/patient/patient";
+import Home from "./pages/Home";
 import ElectronicMedicalRecordComponent from "./component/electronicmedicalrecord";
 import AppointmentComponent from "./component/appointment";
 import MessagesComponent from "./component/messaging";
@@ -32,7 +33,8 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<LoginForm />} />
+        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<LoginForm />} />
         <Route path="/signup" element={<SignUpForm />} />
         <Route path="/add-user" element={<AddUserComponent />} />
         <Route path="/update-user/:id" element={<UpdateUserComponent />} />

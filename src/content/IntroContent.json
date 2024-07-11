@@ -1,0 +1,13 @@
+{
+  "title": "Health care portal to reduce the gap between patients and doctors",
+  "text": "We offer a platform for patients to book appointments with doctors online and for doctors to manage their appointments and patients. Our goal is to bridge the gap between patients and doctors, enhancing the healthcare experience for all.",
+  "button": [
+    {
+      "title": "Explore"
+    },
+    {
+      "title": "Learn more",
+      "color": "#fff"
+    }
+  ]
+}
