@@ -3,8 +3,8 @@ import React from "react";
 import Modal from "react-modal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
+// import "./index.css";
 
-import "./index.css";
 interface ModalComponentProps {
   isOpen: boolean;
   onRequestClose: () => void;

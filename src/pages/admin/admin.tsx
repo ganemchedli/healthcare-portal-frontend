@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { Outlet } from "react-router-dom";
-import SidebarAdmin from "../../component/sidebarAdmin";
+import SidebarAdmin from "../../component/SidebarAdmin";
 const Admin: React.FC = () => {
   return (
     <>

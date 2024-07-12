@@ -10,9 +10,9 @@ import {
 } from "@ant-design/icons";
 
 import { Button, Layout, Menu, theme, Avatar } from "antd";
-import Appointments from "../../component/appointment";
-import ElectronicMedicalRecord from "../../component/electronicmedicalrecord";
-import Messaging from "../../component/messaging";
+import Appointments from "../../component/Appointment";
+import ElectronicMedicalRecord from "../../component/Electronicmedicalrecord";
+import Messaging from "../../component/Messaging";
 interface DoctorProps {
   // Add any props you need for the component here
 }

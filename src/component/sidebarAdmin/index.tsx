@@ -1,10 +1,11 @@
 import { useState } from "react";
-import "./index.css";
+
 import { NavLink as RouterNavLink } from "react-router-dom";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHome, faList, faGear } from "@fortawesome/free-solid-svg-icons";
 
+import "./index.css";
 interface SidebarProps {
   // You can add any additional props here
 }

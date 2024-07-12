@@ -69,7 +69,9 @@ const LoginForm: React.FC = () => {
         <div className="col">
           <div className="container">
             <div className="row logo">
-              <img className="" src="../src/assets/corilus-logo.png" alt="" />
+              <a href="/">
+                <img className="" src="../src/assets/corilus-logo.png" alt="" />
+              </a>
             </div>
             <div className="row picture">
               <img className="" src="../src/assets/corilus.svg" alt="" />
@@ -110,8 +112,8 @@ const LoginForm: React.FC = () => {
                 />
               </div>
               <div className="container">
-                <div className="row ">
-                  <div className="col-8">
+                <div className="row">
+                  <div className="col-7">
                     <div className="form-check">
                       <input
                         type="checkbox"
@@ -123,7 +125,7 @@ const LoginForm: React.FC = () => {
                       </label>
                     </div>
                   </div>
-                  <div className="col-4">
+                  <div className="col-5">
                     <a href="">Forget password ?</a>
                   </div>
                 </div>

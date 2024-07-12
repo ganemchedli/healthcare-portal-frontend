@@ -3,9 +3,9 @@ import { deleteUser, listUsers } from "../../services/UserServices";
 import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare, faTrash } from "@fortawesome/free-solid-svg-icons";
-import ModalComponent from "../modal"; // adjust the path as necessary
-import AddUserComponent from "../addUser";
-import UpdateUserComponent from "../updateUser";
+import ModalComponent from "../Modal"; // adjust the path as necessary
+import AddUserComponent from "../AddUser";
+import UpdateUserComponent from "../UpdateUser";
 import "./index.css";
 interface User {
   id: number;

@@ -25,7 +25,7 @@ const SignupForm: React.FC = () => {
   const navigate = useNavigate();
 
   const handleSignInClick = () => {
-    navigate("/"); // Redirect to the sign-up page
+    navigate("/login"); // Redirect to the sign-up page
   };
 
   const handleSubmit = async (event: React.FormEvent) => {
@@ -76,7 +76,9 @@ const SignupForm: React.FC = () => {
         <div className="col">
           <div className="container">
             <div className="row logo">
-              <img className="" src="../src/assets/corilus-logo.png" alt="" />
+              <a href="/">
+                <img className="" src="../src/assets/corilus-logo.png" alt="" />
+              </a>
             </div>
             <div className="row picture">
               <img className="" src="../src/assets/corilus.svg" alt="" />

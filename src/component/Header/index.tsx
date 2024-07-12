@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Row, Col, Drawer } from "antd";
 import Container from "../common/Container";
 import { SvgIcon } from "../common/SvgIcon";
@@ -23,6 +24,7 @@ const Header = () => {
   };
 
   const MenuItem = () => {
+    const navigate = useNavigate();
     const scrollTo = (id: string) => {
       const element = document.getElementById(id) as HTMLDivElement;
       element.scrollIntoView({
@@ -35,11 +37,11 @@ const Header = () => {
         <CustomNavLinkSmall onClick={() => scrollTo("about")}>
           <Span>{"About"}</Span>
         </CustomNavLinkSmall>
-        <CustomNavLinkSmall onClick={() => scrollTo("mission")}>
-          <Span>{"Mission"}</Span>
+        <CustomNavLinkSmall onClick={() => navigate("/signup")}>
+          <Span>{"Sign up "}</Span>
         </CustomNavLinkSmall>
-        <CustomNavLinkSmall onClick={() => scrollTo("product")}>
-          <Span>{"Product"}</Span>
+        <CustomNavLinkSmall onClick={() => navigate("/login")}>
+          <Span>{"Sign in"}</Span>
         </CustomNavLinkSmall>
         <CustomNavLinkSmall
           style={{ width: "180px" }}
