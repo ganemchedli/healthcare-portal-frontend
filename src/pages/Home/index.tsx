@@ -39,7 +39,7 @@ const Home: React.FC = () => {
           direction="left"
           title={AboutContent.title}
           content={AboutContent.text}
-          section={AboutContent.section}
+          // section={AboutContent.section}
           icon="Med record.svg"
           id="about"
         />
@@ -47,7 +47,7 @@ const Home: React.FC = () => {
           direction="right"
           title={MissionContent.title}
           content={MissionContent.text}
-          icon="doctorpatient.svg"
+          icon="doctorpatient (2).svg"
           id="mission"
         />
         <ContentBlock
