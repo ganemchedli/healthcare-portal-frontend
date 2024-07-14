@@ -13,13 +13,10 @@ import AddUserComponent from "./component/AddUser";
 import UpdateUserComponent from "./component/UpdateUser";
 import ListUsersComponent from "./component/ListUsersComponent";
 import Profile from "./component/User/profile";
-import ListOfPatients from "./component/Listofpatients";
 import Doctor from "./pages/doctor/doctor";
 import Patient from "./pages/patient/patient";
+import Nurse from "./pages/nurse/nurse";
 import Home from "./pages/Home";
-import ElectronicMedicalRecordComponent from "./component/Electronicmedicalrecord";
-import AppointmentComponent from "./component/Appointment";
-import MessagesComponent from "./component/Messaging";
 
 function App() {
   // State to manage the visibility of the sidebar
@@ -37,10 +34,11 @@ function App() {
         <Route path="/login" element={<LoginForm />} />
         <Route path="/signup" element={<SignUpForm />} />
         <Route path="/add-user" element={<AddUserComponent />} />
-        <Route path="/update-user/:id" element={<UpdateUserComponent />} />
+        {/* <Route path="/update-user/:id" element={<UpdateUserComponent />} /> */}
         <Route path="/profile" element={<Profile />} />
-      </Routes>
-      <Routes>
+        <Route path="/doctor" element={<Doctor />} />
+        <Route path="/patient" element={<Patient />} />
+        <Route path="/nurse" element={<Nurse />} />
         <Route path="/admin" element={<Admin />}>
           <Route
             path="users"
@@ -48,10 +46,6 @@ function App() {
           />
           <Route path="profile" element={<Profile />} />
         </Route>
-      </Routes>
-      <Routes>
-        <Route path="/doctor" element={<Doctor />} />
-        <Route path="/patient" element={<Patient />}></Route>
       </Routes>
     </Router>
   );

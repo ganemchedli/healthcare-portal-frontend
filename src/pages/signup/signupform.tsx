@@ -60,6 +60,23 @@ const SignupForm: React.FC = () => {
         // Check if the request was successful
         if (response.status == 200) {
           // Handle successful login (redirect, update state, etc.)
+          switch (response.data.role) {
+            case "ADMIN":
+              navigate("/admin/users");
+              break;
+            case "PAIENT":
+              navigate("/patient");
+              break;
+            case "DOCTOR":
+              navigate("/doctor");
+              break;
+            case "NURSE":
+              navigate("/nurse");
+              break;
+            default:
+              navigate("/signup");
+          }
+
           console.log(response.data);
           console.log("Sign up successful");
         }

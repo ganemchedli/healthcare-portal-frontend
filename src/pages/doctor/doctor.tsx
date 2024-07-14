@@ -1,17 +1,17 @@
 import { useState } from "react";
-import { Outlet } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import {
-  MenuFoldOutlined,
-  MenuUnfoldOutlined,
   FolderAddOutlined,
   UserOutlined,
   CalendarOutlined,
   MessageOutlined,
   LogoutOutlined,
 } from "@ant-design/icons";
+import { Button, Layout, Menu, theme } from "antd";
 
-import { Button, Layout, Menu, theme, Avatar } from "antd";
+import { logout } from "../../services/AuthServices";
+
 import ListOfPatients from "../../component/Listofpatients";
 import Appointments from "../../component/Appointment";
 import ElectronicMedicalRecord from "../../component/Electronicmedicalrecord";
@@ -34,6 +34,7 @@ const Doctor: React.FC<DoctorProps> = () => {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
 
+  const navigate = useNavigate();
   // Function to handle menu item click
   const onMenuClick = (key: string) => {
     setActiveMenu(key);
@@ -72,8 +73,8 @@ const Doctor: React.FC<DoctorProps> = () => {
   };
 
   const handleLogout = () => {
-    // Implement your logout logic here
-    console.log("Logging out...");
+    logout();
+    navigate("/");
   };
   return (
     <Layout hasSider>

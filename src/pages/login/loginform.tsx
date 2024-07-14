@@ -44,10 +44,10 @@ const LoginForm: React.FC = () => {
             navigate("/profile");
             break;
           case "DOCTOR":
-            navigate("/ehr");
+            navigate("/doctor");
             break;
           case "NURSE":
-            navigate("/ehr");
+            navigate("/nurse");
             break;
           default:
             navigate("/login");

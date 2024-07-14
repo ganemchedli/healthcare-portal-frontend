@@ -1,9 +1,15 @@
 import { useState } from "react";
-
-import { NavLink as RouterNavLink } from "react-router-dom";
+import { NavLink as RouterNavLink, useNavigate } from "react-router-dom";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHome, faList, faGear } from "@fortawesome/free-solid-svg-icons";
+import {
+  faHome,
+  faList,
+  faGear,
+  faRightFromBracket,
+} from "@fortawesome/free-solid-svg-icons";
+
+import { logout } from "../../services/AuthServices";
 
 import "./index.css";
 interface SidebarProps {
@@ -14,6 +20,8 @@ const SidebarAdmin: React.FC<SidebarProps> = () => {
   const [sidebarActive, setSidebarActive] = useState(false);
   const [activeItem, setActiveItem] = useState("Dashboard");
 
+  const navigate = useNavigate();
+
   const handleSidebarToggle = () => {
     setSidebarActive(!sidebarActive);
   };
@@ -22,6 +30,10 @@ const SidebarAdmin: React.FC<SidebarProps> = () => {
     setActiveItem(item);
   };
 
+  const handleLogout = () => {
+    logout();
+    navigate("/");
+  };
   return (
     <div className="main-container d-flex">
       <div className={`sidebar ${sidebarActive ? "active" : ""}`} id="side_nav">
@@ -62,9 +74,21 @@ const SidebarAdmin: React.FC<SidebarProps> = () => {
             className={activeItem === "Settings" ? "active" : ""}
             onClick={() => handleItemClick("Settings")}
           >
-            <a href="#" className="text-decoration-none px-3 py-2 d-block">
+            <a href="" className="text-decoration-none px-3 py-2 d-block">
               <FontAwesomeIcon icon={faGear} />{" "}
               <RouterNavLink to="/admin/profile">Settings</RouterNavLink>
+            </a>
+          </li>
+          <li
+            className={activeItem === "Logout" ? "active" : ""}
+            onClick={() => handleItemClick("Logout")}
+          >
+            <a
+              href=""
+              className="text-decoration-none px-3 py-2 d-block"
+              onClick={handleLogout}
+            >
+              <FontAwesomeIcon icon={faRightFromBracket} /> Logout
             </a>
           </li>
         </ul>

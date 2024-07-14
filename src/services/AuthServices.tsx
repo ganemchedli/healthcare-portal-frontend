@@ -9,3 +9,8 @@ export const register = (formData: FormData) =>
 
 export const authenticate = async (data: any) =>
   axios.post("auth/authenticate", data);
+
+export const logout = () => {
+  localStorage.clear();
+  axios.post("auth/logout");
+};
