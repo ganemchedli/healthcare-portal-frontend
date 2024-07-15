@@ -4,6 +4,7 @@ import "./loginform.css";
 import { useNavigate } from "react-router-dom";
 
 import { jwtDecode } from "jwt-decode";
+import { notification } from "antd";
 
 const LoginForm: React.FC = () => {
   const [email, setemail] = useState<string>("");
@@ -34,12 +35,16 @@ const LoginForm: React.FC = () => {
         localStorage.setItem("User email", response.data.email);
         localStorage.setItem("User role", response.data.role);
 
+        notification.success({
+          message: "Login Successfully",
+          description: "Welcome to you profile !",
+        });
         switch (response.data.role) {
           case "ADMIN":
             navigate("/admin/users");
             break;
-          case "PAIENT":
-            navigate("/profile");
+          case "PATIENT":
+            navigate("/patient");
             break;
           case "DOCTOR":
             navigate("/doctor");
@@ -53,6 +58,10 @@ const LoginForm: React.FC = () => {
       }
     } catch (error) {
       // Handle any errors that occur during the fetch operation
+      notification.error({
+        message: "Error login to your accoutn",
+        description: "There was a problem while logging in.",
+      });
       console.error("Error:", error);
     }
   };

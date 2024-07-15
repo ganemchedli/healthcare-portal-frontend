@@ -4,6 +4,7 @@ interface UserProps {
   userData: {
     image: string;
   };
+  size?: number;
 }
 
 const UserImage: React.FC<UserProps> = ({ userData }) => {

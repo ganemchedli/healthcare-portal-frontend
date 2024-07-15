@@ -17,6 +17,7 @@ import Doctor from "./pages/doctor/doctor";
 import Patient from "./pages/patient/patient";
 import Nurse from "./pages/nurse/nurse";
 import Home from "./pages/Home";
+import ElectronicMedicalRecord from "./component/Electronicmedicalrecord";
 
 function App() {
   // State to manage the visibility of the sidebar

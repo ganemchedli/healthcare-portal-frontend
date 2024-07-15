@@ -7,6 +7,8 @@ export const createEmr = async (doctorId: any) =>
     },
   });
 export const getEmr = async (id: Number) => axios.get("emr/" + id);
+export const getEmrByDoctorId = async (doctorId: any) =>
+  axios.get("emr/doctor/" + doctorId);
 export const deleteEmr = async (id: any) => axios.delete("emr/" + id);
 //Clinical Note
 export const getAllClinicalNotesByEmrId = async (emrId: any) =>
@@ -75,6 +77,35 @@ export const getPatientByEmail = async (email: any, emrId: any) => {
   }
 };
 
+export const getPatientByEmailByClient = async (email: any) => {
+  try {
+    const response = await axios.get("patient/client/email", {
+      params: { email },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching patient details:", error);
+    throw error;
+  }
+};
+
+export const getPatientByEmailOnly = async (email: any) => {
+  try {
+    const response = await axios.get("patient/email", {
+      params: { email },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching patient details:", error);
+    throw error;
+  }
+};
+
+export const getPatientByEmrId = async (emrId: any) =>
+  axios.get("patient/emr/" + emrId);
+export const getAllPatients = async () => axios.get("patient/all");
+
+export const getPatientById = async (id: any) => axios.get("patient/id/" + id);
 //Plan
 export const getAllPlanByEmrId = async (emrId: any) =>
   axios.get("emr/" + emrId + "/plans");

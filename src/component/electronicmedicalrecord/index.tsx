@@ -1,20 +1,19 @@
-import React from "react";
-import {
-  Collapse,
-  List,
-  Typography,
-  Row,
-  Col,
-  Card,
-  Avatar,
-  Button,
-  Table,
-  Space,
-  Tag,
-  TableProps,
-} from "antd";
-import { PlusCircleOutlined } from "@ant-design/icons";
+import React, { useEffect, useState } from "react";
+import { List, Row, Col, Card, Button, Table, TableProps } from "antd";
+import UserImage from "../UserImage";
+
 import "./index.css";
+import {
+  getPatientById,
+  getAllVitalSignsByEmrId,
+  getAllLabTestsByEmrId,
+  getAllMedicationByEmrId,
+  getAllImmunizationByEmrId,
+  getAllClinicalNotesByEmrId,
+  getMedicalHistoryByEmrId,
+  getInsuranceByEmrId,
+  getAllPlanByEmrId,
+} from "../../services/EmrService";
 
 interface VitalSigns {
   bloodPressure: string;
@@ -71,11 +70,6 @@ interface Procedure {
   outcome: string;
   anesthesiaRecords: string;
 }
-
-interface ElectronicMedicalRecordProps {
-  patientId: string; // Assuming you might load data based on a patient ID
-}
-
 const medicationColumns: TableProps<Medication>["columns"] = [
   {
     title: "Prescription Date",
@@ -204,67 +198,80 @@ const labTestColumns: TableProps<LabTest>["columns"] = [
     width: "30%",
   },
 ];
+interface ElectronicMedicalRecordProps {
+  patientId: number; // Assuming you might load data based on a patient ID
+}
+
+interface ElectronicMedicalRecordProps {
+  patientId: number;
+}
+
 const ElectronicMedicalRecord: React.FC<ElectronicMedicalRecordProps> = ({
   patientId,
 }) => {
-  // Dummy data loading mechanism
-  const data = {
-    vitalSigns: {
-      bloodPressure: "120/80",
-      heartRate: 72,
-      respiratoryRate: 18,
-      temperature: 98.6,
-      height: 175,
-      weight: 70,
-      bmi: 22.9,
-    },
-    labTests: [
-      { testName: "CBC", testDate: "2024-01-01", results: "Normal" },
-      {
-        testName: "Lipid Profile",
-        testDate: "2024-01-02",
-        results: "High cholesterol",
-      },
-    ],
-    medications: [
-      {
-        medicationName: "Amoxicillin",
-        dosage: "500mg",
-        prescriptionDate: "2024-01-01",
-        allergy: false,
-        adverseReaction: "Nausea",
-      },
-    ],
-    immunizations: [
-      {
-        vaccineName: "Influenza",
-        administrationDate: "2023-12-01",
-        reaction: "None",
-      },
-    ],
-    clinicalNotes: [
-      {
-        noteDate: "2024-01-01",
-        providerName: "Dr. Smith",
-        assessment: "Stable",
-        diagnosis: "Influenza",
-      },
-    ],
-    medicalHistory: {
-      pastConditions: ["Asthma"],
-      chronicIllnesses: ["Diabetes"],
-      surgicalHistory: ["Appendectomy"],
-      familyMedicalHistory: ["Heart Disease"],
-    },
-    insurance: { providerName: "United Health", policyNumber: "123456" },
-    procedures: [
-      {
-        procedureName: "Knee Surgery",
-        procedureDate: "2023-11-01",
-        outcome: "Successful",
-        anesthesiaRecords: "Local anesthesia",
-      },
-    ],
+  const [patientData, setPatientData] = useState<any>(null);
+  const [vitalSigns, setVitalSigns] = useState<VitalSigns | null>(null);
+  const [labTests, setLabTests] = useState<LabTest[]>([]);
+  const [medications, setMedications] = useState<Medication[]>([]);
+  const [immunizations, setImmunizations] = useState<Immunization[]>([]);
+  const [clinicalNotes, setClinicalNotes] = useState<ClinicalNote[]>([]);
+  const [medicalHistory, setMedicalHistory] = useState<MedicalHistory | null>(
+    null
+  );
+  const [insurance, setInsurance] = useState<Insurance | null>(null);
+  const [procedures, setProcedures] = useState<Procedure[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    fetchData();
+  }, [patientId]);
+
+  const fetchData = async () => {
+    try {
+      // Fetch patient data
+      const patientResponse = await getPatientById(patientId);
+      if (patientResponse.data) {
+        setPatientData(patientResponse.data);
+        // Fetch other data only if emrId is available
+        const emrId = patientResponse.data.electronicMedicalRecordId;
+        const [
+          vitalSignsResponse,
+          labTestsResponse,
+          medicationsResponse,
+          immunizationsResponse,
+          clinicalNotesResponse,
+          medicalHistoryResponse,
+          insuranceResponse,
+          planResponse,
+          // other responses
+        ] = await Promise.all([
+          getAllVitalSignsByEmrId(emrId),
+          getAllLabTestsByEmrId(emrId),
+          getAllMedicationByEmrId(emrId),
+          getAllImmunizationByEmrId(emrId),
+          getAllClinicalNotesByEmrId(emrId),
+          getMedicalHistoryByEmrId(emrId),
+          getInsuranceByEmrId(emrId),
+          getAllPlanByEmrId(emrId),
+          // other promises
+        ]);
+
+        setVitalSigns(vitalSignsResponse.data);
+        setLabTests(labTestsResponse.data);
+        setMedications(medicationsResponse.data);
+        setImmunizations(immunizationsResponse.data);
+        setClinicalNotes(clinicalNotesResponse.data);
+        setMedicalHistory(medicalHistoryResponse.data);
+        setInsurance(insuranceResponse.data);
+        setProcedures(planResponse.data);
+        // set other states
+      } else {
+        console.error("EMR ID is missing from the patient data");
+      }
+    } catch (error) {
+      console.error("Failed to fetch data:", error);
+    }
   };
 
   // Render Function
@@ -279,30 +286,31 @@ const ElectronicMedicalRecord: React.FC<ElectronicMedicalRecordProps> = ({
         <Card className="mb-3">
           <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
             <Col className="gutter-row" span={6}>
-              <Avatar size={150} src={"src/assets/photo.jpg"} />
+              {/* <UserImage userData={patientData} /> */}
             </Col>
             <Col className="gutter-row" span={6}>
               <div className="mb-2">
-                <span className="fw-bold">Name :</span> Foulen ben Foulen
+                <span className="fw-bold">Name :</span> {patientData?.firstName}{" "}
               </div>
               <div className="mb-2">
-                <span className="fw-bold">Gender :</span> Male
+                <span className="fw-bold">Gender :</span> {patientData?.gender}
               </div>
               <div className="mb-2">
-                <span className="fw-bold"> Age :</span> 25
+                <span className="fw-bold"> Age :</span> {patientData?.birthday}
               </div>
               <div>
                 <p className="fw-bold">Insurance details :</p>
-                {data.insurance.providerName} - {data.insurance.policyNumber}
+                {insurance?.providerName} - {insurance?.policyNumber}
               </div>
             </Col>
             <Col className="gutter-row" span={6}>
               <div className="mb-2">
                 {" "}
-                <span className="fw-bold">Weight :</span> 90 kg
+                <span className="fw-bold">Weight :</span> {vitalSigns?.weight}{" "}
+                kg
               </div>
               <div className="mb-2">
-                <span className="fw-bold">Height :</span> 190 cm
+                <span className="fw-bold">Height :</span> {vitalSigns?.height}{" "}
               </div>
               <div>
                 <span className="fw-bold">Marital status :</span> Single
@@ -320,27 +328,6 @@ const ElectronicMedicalRecord: React.FC<ElectronicMedicalRecordProps> = ({
         </Card>
       </div>
       <div>
-        <Card className="mb-3">
-          <Row>
-            <Button className="me-3">
-              Vital signs <PlusCircleOutlined />
-            </Button>
-            <Button className="me-3">
-              Medication <PlusCircleOutlined />
-            </Button>
-            <Button className="me-3">
-              Medical History <PlusCircleOutlined />
-            </Button>
-            <Button className="me-3">
-              Clinical note <PlusCircleOutlined />
-            </Button>
-            <Button className="me-3">
-              Patient information <PlusCircleOutlined />
-            </Button>
-          </Row>
-        </Card>
-      </div>
-      <div>
         <Row>
           <Col>
             <Card
@@ -353,15 +340,15 @@ const ElectronicMedicalRecord: React.FC<ElectronicMedicalRecordProps> = ({
                 <Col>
                   <p>
                     <span className="fw-bold">Blood Pressure:</span> <br />
-                    {data.vitalSigns.bloodPressure} per min (Normal range 60 -
-                    100 per min)
+                    {vitalSigns?.bloodPressure} per min (Normal range 60 - 100
+                    per min)
                   </p>
                 </Col>
                 <Col>
                   <p>
                     <span className="fw-bold ">Heart Rate:</span> <br />
-                    {data.vitalSigns.heartRate} per min (Normal range 12 - 20
-                    per min)
+                    {vitalSigns?.heartRate} per min (Normal range 12 - 20 per
+                    min)
                   </p>
                 </Col>
               </Row>
@@ -370,15 +357,15 @@ const ElectronicMedicalRecord: React.FC<ElectronicMedicalRecordProps> = ({
                   {" "}
                   <p>
                     <span className="fw-bold">Respiratory rate :</span> <br />
-                    {data.vitalSigns.respiratoryRate} per min (Normal range : 12
-                    - 20 min)
+                    {vitalSigns?.respiratoryRate} per min (Normal range : 12 -
+                    20 min)
                   </p>
                 </Col>
                 <Col>
                   <p>
                     <span className="fw-bold">Temperature :</span> <br />
-                    {data.vitalSigns.temperature} °C (Normal range : 36.5 °C -
-                    37.5 °C){" "}
+                    {vitalSigns?.temperature} °C (Normal range : 36.5 °C - 37.5
+                    °C){" "}
                   </p>
                 </Col>
               </Row>
@@ -392,10 +379,7 @@ const ElectronicMedicalRecord: React.FC<ElectronicMedicalRecordProps> = ({
               title="Lab Tests"
               bordered={true}
             >
-              <Table
-                columns={labTestColumns}
-                dataSource={data.labTests}
-              ></Table>
+              <Table columns={labTestColumns} dataSource={labTests}></Table>
             </Card>
           </Col>
         </Row>
@@ -406,10 +390,7 @@ const ElectronicMedicalRecord: React.FC<ElectronicMedicalRecordProps> = ({
               title="Medication"
               bordered={true}
             >
-              <Table
-                columns={medicationColumns}
-                dataSource={data.medications}
-              />
+              <Table columns={medicationColumns} dataSource={medications} />
             </Card>
           </Col>
         </Row>
@@ -422,7 +403,7 @@ const ElectronicMedicalRecord: React.FC<ElectronicMedicalRecordProps> = ({
             >
               <Table
                 columns={immunizationColumns}
-                dataSource={data.immunizations}
+                dataSource={immunizations}
               ></Table>
             </Card>
           </Col>
@@ -436,7 +417,7 @@ const ElectronicMedicalRecord: React.FC<ElectronicMedicalRecordProps> = ({
             >
               <Table
                 columns={clinicalNotesColumns}
-                dataSource={data.clinicalNotes}
+                dataSource={clinicalNotes}
               ></Table>
             </Card>
           </Col>
@@ -450,7 +431,7 @@ const ElectronicMedicalRecord: React.FC<ElectronicMedicalRecordProps> = ({
             >
               <Table
                 columns={medicalHistoryColumns}
-                dataSource={[data.medicalHistory]}
+                dataSource={[medicalHistory]}
               ></Table>
             </Card>
           </Col>

@@ -1,59 +1,70 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 import {
-  MenuFoldOutlined,
-  MenuUnfoldOutlined,
   FolderAddOutlined,
-  UserOutlined,
   CalendarOutlined,
   MessageOutlined,
   LogoutOutlined,
 } from "@ant-design/icons";
-import { Button, Layout, Menu, theme, Avatar } from "antd";
+import { Button, Layout, Menu, theme } from "antd";
 
 import { logout } from "../../services/AuthServices";
-
+import {
+  getPatientByEmailByClient,
+  getPatientByEmailOnly,
+  getPatientById,
+} from "../../services/EmrService";
+import UserImage from "../../component/UserImage";
 import Appointments from "../../component/Appointment";
 import ElectronicMedicalRecord from "../../component/Electronicmedicalrecord";
 import Messaging from "../../component/Messaging";
-interface DoctorProps {
-  // Add any props you need for the component here
-}
+
 const { Header, Sider, Content } = Layout;
 
-const patientInfo: any = {
-  name: "Alex Johnson",
-  age: 29,
-  gender: "Male",
-  patientImageUrl: "https://randomuser.me/api/portraits/men/29.jpg", // URL from a public API for placeholder images
-};
-
-const Patient: React.FC<DoctorProps> = () => {
+const Patient: React.FC = () => {
   const [activeMenu, setActiveMenu] = useState("1"); // State to track active menu item
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
+
+  const [patientData, setPatientData] = useState<any>(null);
 
   const navigate = useNavigate();
   // Function to handle menu item click
   const onMenuClick = (key: string) => {
     setActiveMenu(key);
   };
+  const email = localStorage.getItem("User email");
+  // Retrieve patient data by Id
+  useEffect(() => {
+    fetchPatientData();
+  }, [email]);
 
+  const fetchPatientData = async () => {
+    try {
+      const patientData = await getPatientByEmailOnly(email);
+      setPatientData(patientData);
+      // Do something with the patient data
+    } catch (error) {
+      console.log("Error fetching patient data: ", error);
+    }
+  };
   // Render different components based on active menu
   const renderContent = () => {
     switch (activeMenu) {
       case "1":
         return (
           <div>
-            <ElectronicMedicalRecord patientId="123" />
+            <Appointments />
           </div>
         );
+
       case "2":
         return (
           <div>
-            <Appointments />
+            <ElectronicMedicalRecord patientId={patientData?.id} />
           </div>
         );
       case "3":
@@ -85,14 +96,9 @@ const Patient: React.FC<DoctorProps> = () => {
         trigger={null}
       >
         <div className="demo-logo-vertical" style={{ padding: 20 }}>
-          <img
-            src="src\assets\photo.jpg"
-            alt="User"
-            style={{ width: "100%", borderRadius: "100%" }}
-          />
-          {/* <Avatar src={"src/assets/photo.jpg"} size={}></Avatar> */}
+          {/* <UserImage userData={patientData} /> */}
           <div className="pt-4 fw-bold text-center text-white">
-            Name of the Patient
+            {patientData?.firstName + " " + patientData?.lastName}
           </div>
           <div className="text-center text-white">Patient</div>
         </div>
@@ -102,15 +108,15 @@ const Patient: React.FC<DoctorProps> = () => {
           defaultSelectedKeys={["1"]}
           items={[
             {
-              key: "1",
-              icon: <FolderAddOutlined />,
-              label: "View my EMR",
-              onClick: () => onMenuClick("1"),
-            },
-            {
               key: "2",
               icon: <CalendarOutlined />,
               label: "Appointments",
+              onClick: () => onMenuClick("1"),
+            },
+            {
+              key: "1",
+              icon: <FolderAddOutlined />,
+              label: "View my EMR",
               onClick: () => onMenuClick("2"),
             },
             {
