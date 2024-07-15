@@ -10,9 +10,9 @@ const SignupForm: React.FC = () => {
   const [confirmPassword, setConfirmPassword] = useState<string>("");
   const [firstname, setFirstName] = useState<string>("");
   const [lastname, setLastName] = useState<string>("");
-  const [gender, setGender] = useState<string>("");
+  const [gender, setGender] = useState<string>("MALE");
   const [state, setState] = useState<string>("");
-  const [role, setRole] = useState<string>("");
+  const [role, setRole] = useState<string>("PATIENT");
   const [city, setCity] = useState<string>("");
   const [address, setAddress] = useState<string>("");
   const [zipCode, setZipCode] = useState<number>();
@@ -57,6 +57,13 @@ const SignupForm: React.FC = () => {
         console.log("Form data : ", formData);
         const response = await register(formData);
 
+        const token = JSON.stringify(response.data.token);
+
+        //Store token in localstorage
+        localStorage.setItem("token", token);
+        localStorage.setItem("userId", response.data.id);
+        localStorage.setItem("User email", response.data.email);
+        localStorage.setItem("User role", response.data.role);
         // Check if the request was successful
         if (response.status == 200) {
           // Handle successful login (redirect, update state, etc.)
@@ -77,8 +84,9 @@ const SignupForm: React.FC = () => {
               navigate("/signup");
           }
 
-          console.log(response.data);
-          console.log("Sign up successful");
+          // Handle successful login (redirect, update state, etc.)
+          console.log("Login successful");
+          console.log("Response data", response.data);
         }
       }
     } catch (error) {
@@ -198,17 +206,18 @@ const SignupForm: React.FC = () => {
                   <label htmlFor="gender" className="form-label">
                     Gender
                   </label>
-                  <input
-                    type="select"
-                    className="form-control"
+                  <select
+                    className="form-select"
+                    name="gender"
                     id="gender"
-                    placeholder="Male of female"
                     onChange={(e) => setGender(e.target.value)}
                     required
-                  />
+                  >
+                    <option value="MALE">Male</option>
+                    <option value="FEMALE">Female</option>
+                  </select>
                 </div>
               </div>
-
               <div className="col-12">
                 <label htmlFor="password" className="form-label">
                   Password
@@ -273,8 +282,10 @@ const SignupForm: React.FC = () => {
               <div className="col-12">
                 <select
                   className="form-select"
+                  name="role"
+                  id="role"
                   onChange={(e) => setRole(e.target.value)}
-                  value="1"
+                  value={role}
                   required
                 >
                   <option value="PATIENT">Patient</option>

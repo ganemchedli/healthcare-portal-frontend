@@ -1,0 +1,7 @@
+/* styles.css */
+.user-image {
+  border-radius: 50%; /* Makes the image round */
+  width: 100px; /* Diameter of the circle */
+  height: 100px; /* Diameter of the circle */
+  object-fit: cover; /* Ensures the image covers the area without stretching */
+}

@@ -33,9 +33,7 @@ const LoginForm: React.FC = () => {
         localStorage.setItem("userId", response.data.id);
         localStorage.setItem("User email", response.data.email);
         localStorage.setItem("User role", response.data.role);
-        // Handle successful login (redirect, update state, etc.)
-        console.log("Login successful");
-        console.log("Response data", response.data);
+
         switch (response.data.role) {
           case "ADMIN":
             navigate("/admin/users");

@@ -1,6 +1,11 @@
 import axios from "../config/axios";
 //Electronic medical record
-export const createEmr = async (emr: any) => axios.get("emr");
+export const createEmr = async (doctorId: any) =>
+  axios.post("emr", doctorId, {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
 export const getEmr = async (id: Number) => axios.get("emr/" + id);
 export const deleteEmr = async (id: any) => axios.delete("emr/" + id);
 //Clinical Note
@@ -17,7 +22,7 @@ export const getAllImmunizationByEmrId = async (emrId: any) =>
   axios.get("emr/" + emrId + "/immunizations");
 export const createImmunization = async (emrId: any, immunization: any) =>
   axios.post("emr/" + emrId + "/immunizations", immunization);
-export const deleteImmunizations = async (immunizationId: any) =>
+export const deleteImmunization = async (immunizationId: any) =>
   axios.delete("immunizations/" + immunizationId);
 export const deledeleteAllImmunizationOfEmr = async (emrId: any) =>
   axios.delete("emr/" + emrId + "/immunizations");
@@ -58,8 +63,18 @@ export const deleteMedication = async (medicationId: any) =>
 export const deleteAllMedicationOfEmr = async (emrId: any) =>
   axios.delete("emr/" + emrId + "/medications");
 //patient
-export const getPatientByEmail = async (email: any) =>
-  axios.get("patient/" + email);
+export const getPatientByEmail = async (email: any, emrId: any) => {
+  try {
+    const response = await axios.get("patient/" + emrId, {
+      params: { email },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching patient details:", error);
+    throw error;
+  }
+};
+
 //Plan
 export const getAllPlanByEmrId = async (emrId: any) =>
   axios.get("emr/" + emrId + "/plans");

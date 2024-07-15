@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-
+//Ant design components
 import {
   FolderAddOutlined,
   UserOutlined,
@@ -9,31 +9,27 @@ import {
   LogoutOutlined,
 } from "@ant-design/icons";
 import { Button, Layout, Menu, theme } from "antd";
-
+//services
 import { logout } from "../../services/AuthServices";
-
+import { getUser } from "../../services/UserServices";
+//components
 import ListOfPatients from "../../component/Listofpatients";
 import Appointments from "../../component/Appointment";
-import ElectronicMedicalRecord from "../../component/Electronicmedicalrecord";
+import EmrForm from "../../component/EmrForm";
 import Messaging from "../../component/Messaging";
+import UserImage from "../../component/UserImage";
+const { Header, Sider, Content } = Layout;
+
 interface DoctorProps {
   // Add any props you need for the component here
 }
-const { Header, Sider, Content } = Layout;
-
-const patientInfo: any = {
-  name: "Alex Johnson",
-  age: 29,
-  gender: "Male",
-  patientImageUrl: "https://randomuser.me/api/portraits/men/29.jpg", // URL from a public API for placeholder images
-};
-
 const Doctor: React.FC<DoctorProps> = () => {
   const [activeMenu, setActiveMenu] = useState("1"); // State to track active menu item
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
-
+  const [doctorData, setDocotorData] = useState<any>({});
+  const [imageUrl, setImageUrl] = useState<any>("");
   const navigate = useNavigate();
   // Function to handle menu item click
   const onMenuClick = (key: string) => {
@@ -52,7 +48,7 @@ const Doctor: React.FC<DoctorProps> = () => {
       case "2":
         return (
           <div>
-            <ElectronicMedicalRecord patientId="123" />
+            <EmrForm />
           </div>
         );
       case "3":
@@ -76,6 +72,21 @@ const Doctor: React.FC<DoctorProps> = () => {
     logout();
     navigate("/");
   };
+
+  const getDoctorData = () => {
+    const idString = localStorage.getItem("userId");
+    const id = parseInt(idString!);
+    getUser(id)
+      .then((response) => {
+        setDocotorData(response.data);
+      })
+      .catch((error) => console.log(error));
+  };
+
+  useEffect(() => {
+    getDoctorData();
+  }, []);
+  console.log("doctor data", doctorData);
   return (
     <Layout hasSider>
       <Sider
@@ -90,14 +101,11 @@ const Doctor: React.FC<DoctorProps> = () => {
         trigger={null}
       >
         <div className="demo-logo-vertical" style={{ padding: 20 }}>
-          <img
-            src="src\assets\photo.jpg"
-            alt="User"
-            style={{ width: "100%", borderRadius: "100%" }}
-          />
+          <UserImage userData={doctorData} />
+
           {/* <Avatar src={"src/assets/photo.jpg"} size={}></Avatar> */}
           <div className="pt-4 fw-bold text-center text-white">
-            Name of the doctor
+            {doctorData.firstName + " " + doctorData.lastName}
           </div>
           <div className="text-center text-white">DOCTOR</div>
         </div>
