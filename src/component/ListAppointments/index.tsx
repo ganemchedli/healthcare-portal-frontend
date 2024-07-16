@@ -7,23 +7,16 @@ import ModalComponent from "../Modal"; // adjust the path as necessary
 import AddUserComponent from "../AddUser";
 import UpdateUserComponent from "../UpdateUser";
 import "./index.css";
-interface User {
+interface Appointment {
   id: number;
-  firstName: string;
-  lastName: string;
-  email: string;
-  password: string;
-  address: string;
-  phoneNumber: number;
-  birthday: string;
-  state: string;
-  city: string;
-  zipCode: number;
-  role: string;
+  appointmentTime: string;
+  status: string;
+  doctorId: number;
+  patientId: number;
 }
 
-const ListUsersComponent: React.FC = () => {
-  const [users, setUsers] = useState<User[]>([]);
+const ListAppointments: React.FC = () => {
+  const [appointments, setAppointments] = useState<User[]>([]);
   const [modalContent, setModalContent] = useState<React.ReactNode | null>(
     null
   );
@@ -42,14 +35,13 @@ const ListUsersComponent: React.FC = () => {
     setModalContent(null);
   };
 
-  function getAllUsers() {
-    listUsers()
+  const getAllAppointments = async () => {
+    await getAllAppointments()
       .then((response) => {
-        setUsers(response.data);
+        setAppointments(response.data);
       })
       .catch((error) => console.log(error));
-  }
-
+  };
 
   function removeUser(id: any) {
     console.log(id);
@@ -144,4 +136,4 @@ const ListUsersComponent: React.FC = () => {
   );
 };
 
-export default ListUsersComponent;
+export default ListAppointments;

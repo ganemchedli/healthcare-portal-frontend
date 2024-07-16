@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react";
 
-import { List, Avatar, Button, Modal } from "antd";
+import { List, Button, Modal } from "antd";
 
 import { getAllPatients } from "../../services/EmrService";
 import UserImage from "../UserImage";
 import ElectronicMedicalRecord from "../Electronicmedicalrecord";
-import { useNavigate } from "react-router-dom";
 
 // Define a type for the patient data
 interface Patient {
@@ -26,18 +25,10 @@ interface Patient {
   electronicMedicalRecordId: number;
 }
 
-// If you have props, define them here
-interface PatientsProps {
-  // You can add props if needed, for example:
-  // someProp: string;
-}
-
 const ListOfPatients: React.FC = () => {
   const [patients, setPatients] = useState<Patient[]>([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [selectedPatientId, setSelectedPatientId] = useState<number | null>(
-    null
-  );
+  const [email, setEmail] = useState<String | null>(null);
 
   useEffect(() => {
     getAllPatients().then((response) => {
@@ -45,14 +36,14 @@ const ListOfPatients: React.FC = () => {
     });
   }, []);
 
-  const openEMR = (id: number) => {
-    setSelectedPatientId(id);
+  const openEMR = (email: string) => {
+    setEmail(email);
     setIsModalVisible(true);
   };
 
   const handleClose = () => {
     setIsModalVisible(false);
-    setSelectedPatientId(null);
+    setEmail(null);
   };
 
   return (
@@ -65,7 +56,7 @@ const ListOfPatients: React.FC = () => {
             actions={[
               <Button
                 key="list-loadmore-edit"
-                onClick={() => openEMR(patient.id)}
+                onClick={() => openEMR(patient.email)}
               >
                 Open EMR
               </Button>,
@@ -87,9 +78,7 @@ const ListOfPatients: React.FC = () => {
         width={1000}
         footer={null} // Remove default buttons
       >
-        {selectedPatientId && (
-          <ElectronicMedicalRecord patientId={selectedPatientId} />
-        )}
+        {email && <ElectronicMedicalRecord patientEmail={email} />}
       </Modal>
     </>
   );

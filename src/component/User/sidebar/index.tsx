@@ -31,7 +31,9 @@ const UserSideBar: React.FC<UserData> = (props) => {
           <div className="profile-group">
             <div className="profile-name text-center">
               <h4>
-                <Link to="/students-profile">{props?.firstName}</Link>
+                <Link to="/students-profile">
+                  {props?.firstName + " " + props?.lastName}
+                </Link>
               </h4>
               <p>{props?.role}</p>
             </div>
@@ -43,7 +45,7 @@ const UserSideBar: React.FC<UserData> = (props) => {
           <h3>ACCOUNT SETTINGS</h3>
           <ul>
             <li>
-              <Link to="/setting-edit-profile" className="">
+              <Link to="/" className="">
                 <i>
                   <Settings size={20} />{" "}
                 </i>{" "}
@@ -51,16 +53,15 @@ const UserSideBar: React.FC<UserData> = (props) => {
               </Link>
             </li>
             <li className="nav-item">
-              <Link to="/setting-student-security">
+              <Link to="/">
                 <i>
                   <User size={20} />
                 </i>{" "}
                 Security
               </Link>
             </li>
-
             <li className="nav-item">
-              <Link to="/setting-student-notification">
+              <Link to="">
                 <i>
                   <Bell size={20} />
                 </i>{" "}
@@ -68,7 +69,7 @@ const UserSideBar: React.FC<UserData> = (props) => {
               </Link>
             </li>
             <li className="nav-item">
-              <Link to="/setting-student-privacy">
+              <Link to="">
                 <i>
                   <Lock size={20} />
                 </i>{" "}
@@ -76,7 +77,7 @@ const UserSideBar: React.FC<UserData> = (props) => {
               </Link>
             </li>
             <li className="nav-item">
-              <Link to="/setting-student-delete-profile">
+              <Link to="">
                 <i>
                   {" "}
                   <Trash2 size={20} />

@@ -71,15 +71,6 @@ const SidebarAdmin: React.FC<SidebarProps> = () => {
         <hr className="h-color mx-2" />
         <ul className="list-unstyled px-2">
           <li
-            className={activeItem === "Settings" ? "active" : ""}
-            onClick={() => handleItemClick("Settings")}
-          >
-            <a href="" className="text-decoration-none px-3 py-2 d-block">
-              <FontAwesomeIcon icon={faGear} />{" "}
-              <RouterNavLink to="/admin/profile">Settings</RouterNavLink>
-            </a>
-          </li>
-          <li
             className={activeItem === "Logout" ? "active" : ""}
             onClick={() => handleItemClick("Logout")}
           >

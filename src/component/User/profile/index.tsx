@@ -351,18 +351,6 @@ const UserEditProfile: React.FC<{}> = ({}) => {
                             />
                           </div>
                         </div>
-                        {/* <div className="col-lg-6">
-                          <div className="form-group">
-                            <label className="form-control-label">
-                              Address Line 2 (Optional)
-                            </label>
-                            <input
-                              type="text"
-                              className="form-control"
-                              placeholder="Address"
-                            />
-                          </div>
-                        </div> */}
                         <div className="col-lg-6">
                           <div className="form-group">
                             <label className="form-control-label">City</label>
@@ -402,12 +390,9 @@ const UserEditProfile: React.FC<{}> = ({}) => {
                 </div>
               </div>
             </div>
-            {/* Profile Details */}
           </div>
         </div>
       </div>
-      {/* Student Dashboard */}
-      {/* <Footer /> */}
     </div>
   );
 };

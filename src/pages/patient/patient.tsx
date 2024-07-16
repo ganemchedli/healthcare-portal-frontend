@@ -7,8 +7,10 @@ import {
   CalendarOutlined,
   MessageOutlined,
   LogoutOutlined,
+  LoadingOutlined,
+  UserOutlined,
 } from "@ant-design/icons";
-import { Button, Layout, Menu, theme } from "antd";
+import { Button, Layout, Menu, theme, Spin } from "antd";
 
 import { logout } from "../../services/AuthServices";
 import {
@@ -21,11 +23,12 @@ import UserImage from "../../component/UserImage";
 import Appointments from "../../component/Appointment";
 import ElectronicMedicalRecord from "../../component/Electronicmedicalrecord";
 import Messaging from "../../component/Messaging";
+import Profile from "../../component/User/profile";
 
 const { Header, Sider, Content } = Layout;
 
 const Patient: React.FC = () => {
-  const [activeMenu, setActiveMenu] = useState("1"); // State to track active menu item
+  const [activeMenu, setActiveMenu] = useState("2"); // State to track active menu item
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
@@ -50,14 +53,18 @@ const Patient: React.FC = () => {
       console.log("Error fetching patient data: ", error);
     }
   };
-
-  console.log("Patient data", patientData);
   // Function to handle menu item click
   const onMenuClick = (key: string) => {
     setActiveMenu(key);
   };
   // Render different components based on active menu
   const renderContent = () => {
+    if (!patientData) {
+      return (
+        <Spin indicator={<LoadingOutlined style={{ fontSize: 48 }} spin />} />
+      ); // or a loading spinner
+    }
+
     switch (activeMenu) {
       case "1":
         return (
@@ -65,11 +72,10 @@ const Patient: React.FC = () => {
             <Appointments />
           </div>
         );
-
       case "2":
         return (
           <div>
-            <ElectronicMedicalRecord patientId={patientData.id} />
+            <ElectronicMedicalRecord patientEmail={patientData.email} />
           </div>
         );
       case "3":
@@ -78,11 +84,16 @@ const Patient: React.FC = () => {
             <Messaging />
           </div>
         );
+      case "4":
+        return (
+          <div>
+            <Profile />
+          </div>
+        );
       default:
         return <div>Content</div>;
     }
   };
-
   const handleLogout = () => {
     logout();
     navigate("/login");
@@ -101,7 +112,7 @@ const Patient: React.FC = () => {
         trigger={null}
       >
         <div className="demo-logo-vertical" style={{ padding: 20 }}>
-          <UserImage userData={patientData} />
+          {patientData && <UserImage userData={patientData} />}
           <div className="pt-4 fw-bold text-center text-white">
             {patientData?.firstName + " " + patientData?.lastName}
           </div>
@@ -128,7 +139,13 @@ const Patient: React.FC = () => {
               key: "3",
               icon: <MessageOutlined />,
               label: "Messages",
-              onClick: () => onMenuClick("3 "),
+              onClick: () => onMenuClick("3"),
+            },
+            {
+              key: "4",
+              icon: <UserOutlined />,
+              label: "Profile",
+              onClick: () => onMenuClick("4"),
             },
           ]}
           style={{ flex: 1 }} // Make the menu use available space
@@ -137,7 +154,7 @@ const Patient: React.FC = () => {
           type="primary"
           icon={<LogoutOutlined />}
           onClick={handleLogout}
-          style={{ marginTop: 200, marginLeft: 16 }}
+          style={{ marginTop: 280, marginLeft: 16 }}
         >
           Logout
         </Button>

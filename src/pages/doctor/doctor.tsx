@@ -7,8 +7,9 @@ import {
   CalendarOutlined,
   MessageOutlined,
   LogoutOutlined,
+  LoadingOutlined,
 } from "@ant-design/icons";
-import { Button, Layout, Menu, theme } from "antd";
+import { Button, Layout, Menu, theme, Spin } from "antd";
 //services
 import { logout } from "../../services/AuthServices";
 import { getUser } from "../../services/UserServices";
@@ -38,6 +39,12 @@ const Doctor: React.FC<DoctorProps> = () => {
 
   // Render different components based on active menu
   const renderContent = () => {
+    if (!doctorData) {
+      return (
+        <Spin indicator={<LoadingOutlined style={{ fontSize: 48 }} spin />} />
+      ); // or a loading spinner
+    }
+
     switch (activeMenu) {
       case "1":
         return (
@@ -144,7 +151,7 @@ const Doctor: React.FC<DoctorProps> = () => {
           type="primary"
           icon={<LogoutOutlined />}
           onClick={handleLogout}
-          style={{ marginTop: 200, marginLeft: 16 }}
+          style={{ marginTop: 300 , marginLeft: 16 }}
         >
           Logout
         </Button>

@@ -10,17 +10,17 @@ import {
   Input,
   DatePicker,
   Select,
+  notification,
 } from "antd";
 import moment from "moment";
-import {
-  getPatientByEmailByClient,
-  getPatientById,
-} from "../../services/EmrService";
+import { getPatientByEmailByClient } from "../../services/EmrService";
 import {
   createAppointment,
   getAppointmentsByDoctorId,
+  getAppointmentsByPatientId,
 } from "../../services/AppointmentService";
-
+import { getUser } from "../../services/UserServices";
+import { updateAppointment } from "../../services/AppointmentService";
 import UserImage from "../UserImage";
 
 interface Patient {
@@ -50,7 +50,7 @@ interface Appointment {
 
 const Appointments: React.FC = () => {
   const [appointments, setAppointments] = useState<Appointment[]>([]);
-  const [appointment, setAppointment] = useState<Appointment | null>(null);
+  const [doctorsData, setDoctorsData] = useState<Patient[]>([]);
   const [patientData, setPatientData] = useState<Patient>();
   const [patientsData, setPatientsData] = useState<Patient[]>([]);
   const [appointmentTime, setAppointmentTime] = useState<string>("");
@@ -66,9 +66,12 @@ const Appointments: React.FC = () => {
   >("All");
   const [isModalVisible, setIsModalVisible] = useState(false);
 
+  const userRole = localStorage.getItem("User role");
+  const userId = localStorage.getItem("userId");
+
   useEffect(() => {
-    fetchedAppointments(localStorage.getItem("userId"));
-  }, [localStorage.getItem("userId")]);
+    fetchedAppointments(userId);
+  }, [userId]);
 
   useEffect(() => {
     setFilteredAppointments(
@@ -77,15 +80,22 @@ const Appointments: React.FC = () => {
       )
     );
     fetchPatientsData();
+    fetchDoctorsData();
+    console.log("Doctors Data:", doctorsData);
   }, [appointments, filter]);
 
   const showModal = () => {
     setIsModalVisible(true);
   };
-  const fetchedAppointments = async (doctorId: any) => {
+  const fetchedAppointments = async (id: any) => {
     try {
-      const response = await getAppointmentsByDoctorId(doctorId);
-      setAppointments(response.data);
+      if (userRole === "PATIENT") {
+        const response = await getAppointmentsByPatientId(id);
+        setAppointments(response.data);
+      } else {
+        const response = await getAppointmentsByDoctorId(id);
+        setAppointments(response.data);
+      }
     } catch (error) {
       console.error("Failed to fetch appointments:", error);
     }
@@ -99,27 +109,56 @@ const Appointments: React.FC = () => {
     }
   };
 
+  const fetchDoctorsData = async (): Promise<void> => {
+    try {
+      appointments.forEach(async (appointment) => {
+        const fetchedDoctor = await getUser(appointment.doctorId);
+        setDoctorsData([...doctorsData, fetchedDoctor.data]);
+      });
+    } catch (err) {
+      console.error(err);
+    }
+  };
   const fetchPatientsData = async (): Promise<void> => {
     try {
       appointments.forEach(async (appointment) => {
-        const fetchedPatient = await getPatientById(appointment.patientId);
+        const fetchedPatient = await getUser(appointment.patientId);
         setPatientsData([...patientsData, fetchedPatient.data]);
       });
     } catch (err) {
       console.error(err);
     }
   };
+
+  const finishAppointment = async (id: number) => {
+    try {
+      const response = await updateAppointment(id, {
+        status: "COMPLETED",
+      });
+      console.log("Appointment updated:", response);
+      notification.success({
+        message: "Appointment Updated",
+        description: "The appointment have been updated successfully.",
+      });
+    } catch (err) {
+      notification.error({
+        message: "Failed to update appointment",
+        description: "There was an error updating the appointment.",
+      });
+      console.error(err);
+    }
+  };
+
   const handleOk = async () => {
     try {
       setIsModalVisible(false);
       // Ensure patient data is fetched before proceeding
       await fetchPatientData(email);
-      const doctorId = localStorage.getItem("userId");
-      console.log("patientData:", patientData);
+
       if (patientData) {
         const newAppointment = {
           patientId: patientData.id,
-          doctorId: Number(doctorId),
+          doctorId: Number(userId),
           appointmentTime: appointmentTime,
           status: status,
         };
@@ -177,44 +216,66 @@ const Appointments: React.FC = () => {
       <List
         itemLayout="horizontal"
         dataSource={filteredAppointments}
-        renderItem={(appointment) => (
-          <List.Item
-            actions={[
-              <Button
-                key="finish"
-                type="primary"
-                onClick={() =>
-                  console.log("Finishing appointment with ID:", appointment.id)
-                }
-              >
-                Finish
-              </Button>,
-              <Button
-                key="postpone"
-                onClick={() =>
-                  console.log("Postponing appointment with ID:", appointment.id)
-                }
-              >
-                Postpone
-              </Button>,
-            ]}
-          >
-            <List.Item.Meta
-              avatar={
-                <Avatar
-                  size={60}
-                  src={`https://i.pravatar.cc/150?img=${appointment.id}`}
+        renderItem={(appointment) => {
+          const patient = patientsData.find(
+            (p) => p.id === appointment.patientId
+          );
+          const doctor = doctorsData.find((d) => d.id === appointment.doctorId);
+          if (userRole === "PATIENT") {
+            return (
+              <List.Item>
+                <List.Item.Meta
+                  avatar={doctor && <UserImage userData={doctor} />}
+                  title={`Appointment ID ${appointment.id}`}
+                  description={`Patient ID: ${
+                    appointment.patientId
+                  }, Doctor ID: ${appointment.doctorId} - Date: ${moment(
+                    appointment.appointmentTime
+                  ).format("MMMM Do YYYY, h:mm a")} - Status: ${
+                    appointment.status
+                  }`}
                 />
-              }
-              title={`Appointment ID ${appointment.id}`}
-              description={`Patient ID: ${appointment.patientId}, Doctor ID: ${
-                appointment.doctorId
-              } - Date: ${moment(appointment.appointmentTime).format(
-                "MMMM Do YYYY, h:mm a"
-              )} - Status: ${appointment.status}`}
-            />
-          </List.Item>
-        )}
+              </List.Item>
+            );
+          } else if (userRole === "DOCTOR") {
+            return (
+              <List.Item
+                actions={[
+                  <Button
+                    key="finish"
+                    type="primary"
+                    onClick={() => finishAppointment(appointment.id)}
+                  >
+                    Finish
+                  </Button>,
+                  <Button
+                    key="postpone"
+                    onClick={() =>
+                      console.log(
+                        "Postponing appointment with ID:",
+                        appointment.id
+                      )
+                    }
+                  >
+                    Postpone
+                  </Button>,
+                ]}
+              >
+                <List.Item.Meta
+                  avatar={patient && <UserImage userData={patient} />}
+                  title={`Appointment ID ${appointment.id}`}
+                  description={`Patient ID: ${
+                    appointment.patientId
+                  }, Doctor ID: ${appointment.doctorId} - Date: ${moment(
+                    appointment.appointmentTime
+                  ).format("MMMM Do YYYY, h:mm a")} - Status: ${
+                    appointment.status
+                  }`}
+                />
+              </List.Item>
+            );
+          }
+        }}
       />
       <Button
         type="primary"
