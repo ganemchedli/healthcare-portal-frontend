@@ -58,8 +58,6 @@ const EmrForm: React.FC = () => {
     initializeEmr();
   }, []); // Empty dependency array ensures this runs only once
 
-  console.log("EMR Data id:", emr?.id);
-
   const handleSubmit = () => {
     notification.success({
       message: "EMR Submitted",

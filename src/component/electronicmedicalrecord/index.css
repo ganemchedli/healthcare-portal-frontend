@@ -1,22 +1,22 @@
 .resizable-card-medication {
-  width: 150%; /* Fixed width */
+  width: 100%; /* Fixed width */
   height: 100%; /* Fixed height */
 }
 .resizable-card-labtest {
-  width: 200%; /* Fixed width */
+  width: 100%; /* Fixed width */
   height: 100%; /* Fixed height */
 }
 .resizable-card-medicalhistory {
-  width: 150%; /* Fixed width */
+  width: 100%; /* Fixed width */
   height: 100%; /* Fixed height */
 }
 .resizable-card-immunization {
-  width: 200%; /* Fixed width */
+  width: 100%; /* Fixed width */
   height: 100%; /* Fixed height */
 }
 
 .resizable-card-clinicalnotes {
-  width: 200%; /* Fixed width */
+  width: 100%; /* Fixed width */
   height: 100%; /* Fixed height */
 }
 */

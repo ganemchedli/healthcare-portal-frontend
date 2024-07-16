@@ -100,12 +100,11 @@ export const getPatientByEmailOnly = async (email: any) => {
     throw error;
   }
 };
-
 export const getPatientByEmrId = async (emrId: any) =>
   axios.get("patient/emr/" + emrId);
 export const getAllPatients = async () => axios.get("patient/all");
-
 export const getPatientById = async (id: any) => axios.get("patient/id/" + id);
+
 //Plan
 export const getAllPlanByEmrId = async (emrId: any) =>
   axios.get("emr/" + emrId + "/plans");
@@ -116,6 +115,7 @@ export const deletePlan = async (planId: any) =>
   axios.delete("plans/" + planId);
 export const deleteAllPlanOfEmr = async (emrId: any) =>
   axios.delete("emr/" + emrId + "/plans");
+
 //Surgery
 export const getAllSurgeriesByMedHistoryId = async (medHistoryId: any) =>
   axios.get("medicalHistory/" + medHistoryId + "/surgeries");

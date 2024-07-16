@@ -5,7 +5,7 @@ export const createAppointment = async (appointment: any) =>
 
 export const getAppointment = async (id: Number) =>
   axios.get("appointment/get/" + id);
-export const getAppointmentsByDoctorId = async (doctorId: any) =>
+export const getAppointmentsByDoctorId = async (doctorId: number) =>
   axios.get("appointment/doctor/" + doctorId);
 
 export const getAllAppointments = () => axios.get("appointment/all");

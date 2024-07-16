@@ -59,7 +59,7 @@ const LoginForm: React.FC = () => {
     } catch (error) {
       // Handle any errors that occur during the fetch operation
       notification.error({
-        message: "Error login to your accoutn",
+        message: "Error login to your accout",
         description: "There was a problem while logging in.",
       });
       console.error("Error:", error);

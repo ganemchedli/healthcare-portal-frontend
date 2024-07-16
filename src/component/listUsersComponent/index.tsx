@@ -134,19 +134,7 @@ const ListUsersComponent: React.FC = () => {
                 >
                   {modalContent}
                 </ModalComponent>
-                {/* <button onClick={openModal}>
-                  <span>
-                    <FontAwesomeIcon icon={faPenToSquare} />
-                  </span>
-                </button>
-                <ModalComponent
-                  isOpen={modalIsOpen}
-                  onRequestClose={closeModal}
-                >
-                  <UpdateUserComponent id={user.id} />
-                </ModalComponent> */}
                 <button
-                  //   className="btn btn-danger"
                   onClick={() => removeUser(user.id)}
                   style={{ marginLeft: "10px" }}
                 >

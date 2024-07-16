@@ -12,8 +12,16 @@ import {
   Select,
 } from "antd";
 import moment from "moment";
-import { getPatientByEmailByClient } from "../../services/EmrService";
-import { createAppointment } from "../../services/AppointmentService";
+import {
+  getPatientByEmailByClient,
+  getPatientById,
+} from "../../services/EmrService";
+import {
+  createAppointment,
+  getAppointmentsByDoctorId,
+} from "../../services/AppointmentService";
+
+import UserImage from "../UserImage";
 
 interface Patient {
   id: number;
@@ -44,6 +52,7 @@ const Appointments: React.FC = () => {
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [appointment, setAppointment] = useState<Appointment | null>(null);
   const [patientData, setPatientData] = useState<Patient>();
+  const [patientsData, setPatientsData] = useState<Patient[]>([]);
   const [appointmentTime, setAppointmentTime] = useState<string>("");
   const [status, setStatus] = useState<"COMPLETED" | "SCHEDULED" | "CANCELED">(
     "SCHEDULED"
@@ -58,11 +67,8 @@ const Appointments: React.FC = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   useEffect(() => {
-    const fetchedAppointments: Appointment[] = [
-      // Sample fetched data
-    ];
-    setAppointments(fetchedAppointments);
-  }, []);
+    fetchedAppointments(localStorage.getItem("userId"));
+  }, [localStorage.getItem("userId")]);
 
   useEffect(() => {
     setFilteredAppointments(
@@ -70,12 +76,20 @@ const Appointments: React.FC = () => {
         (appointment) => filter === "All" || appointment.status === filter
       )
     );
+    fetchPatientsData();
   }, [appointments, filter]);
 
   const showModal = () => {
     setIsModalVisible(true);
   };
-
+  const fetchedAppointments = async (doctorId: any) => {
+    try {
+      const response = await getAppointmentsByDoctorId(doctorId);
+      setAppointments(response.data);
+    } catch (error) {
+      console.error("Failed to fetch appointments:", error);
+    }
+  };
   const fetchPatientData = async (email: string): Promise<void> => {
     try {
       const fetchedPatient = await getPatientByEmailByClient(email);
@@ -85,6 +99,16 @@ const Appointments: React.FC = () => {
     }
   };
 
+  const fetchPatientsData = async (): Promise<void> => {
+    try {
+      appointments.forEach(async (appointment) => {
+        const fetchedPatient = await getPatientById(appointment.patientId);
+        setPatientsData([...patientsData, fetchedPatient.data]);
+      });
+    } catch (err) {
+      console.error(err);
+    }
+  };
   const handleOk = async () => {
     try {
       setIsModalVisible(false);

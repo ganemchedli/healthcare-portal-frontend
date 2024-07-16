@@ -16,6 +16,7 @@ import {
   getPatientByEmailOnly,
   getPatientById,
 } from "../../services/EmrService";
+import { getUser } from "../../services/UserServices";
 import UserImage from "../../component/UserImage";
 import Appointments from "../../component/Appointment";
 import ElectronicMedicalRecord from "../../component/Electronicmedicalrecord";
@@ -32,24 +33,28 @@ const Patient: React.FC = () => {
   const [patientData, setPatientData] = useState<any>(null);
 
   const navigate = useNavigate();
-  // Function to handle menu item click
-  const onMenuClick = (key: string) => {
-    setActiveMenu(key);
-  };
-  const email = localStorage.getItem("User email");
-  // Retrieve patient data by Id
-  useEffect(() => {
-    fetchPatientData();
-  }, [email]);
 
-  const fetchPatientData = async () => {
+  const id = localStorage.getItem("userId");
+
+  useEffect(() => {
+    fetchPatientData(id);
+    console.log("Patient data", patientData);
+  }, [id]);
+
+  const fetchPatientData = async (id: string | null) => {
     try {
-      const patientData = await getPatientByEmailOnly(email);
-      setPatientData(patientData);
+      const response = await getUser(id);
+      setPatientData(response.data);
       // Do something with the patient data
     } catch (error) {
       console.log("Error fetching patient data: ", error);
     }
+  };
+
+  console.log("Patient data", patientData);
+  // Function to handle menu item click
+  const onMenuClick = (key: string) => {
+    setActiveMenu(key);
   };
   // Render different components based on active menu
   const renderContent = () => {
@@ -64,7 +69,7 @@ const Patient: React.FC = () => {
       case "2":
         return (
           <div>
-            <ElectronicMedicalRecord patientId={patientData?.id} />
+            <ElectronicMedicalRecord patientId={patientData.id} />
           </div>
         );
       case "3":
@@ -96,7 +101,7 @@ const Patient: React.FC = () => {
         trigger={null}
       >
         <div className="demo-logo-vertical" style={{ padding: 20 }}>
-          {/* <UserImage userData={patientData} /> */}
+          <UserImage userData={patientData} />
           <div className="pt-4 fw-bold text-center text-white">
             {patientData?.firstName + " " + patientData?.lastName}
           </div>

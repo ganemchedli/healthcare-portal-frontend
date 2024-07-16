@@ -37,6 +37,7 @@ const MedicalHistorySection: React.FC<MedicalHistorySectionProps> = ({
     try {
       const response = await createMedicalHistory(emrId, values);
       setMedicalHistory({ ...values, id: response.data.id }); // Assuming the response contains the ID
+      console.log("Medical History", medicalHistory);
       notification.success({
         message: "Medical History Saved",
         description: "Your medical history has been successfully updated.",

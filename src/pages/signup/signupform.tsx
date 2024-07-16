@@ -71,7 +71,7 @@ const SignupForm: React.FC = () => {
             case "ADMIN":
               navigate("/admin/users");
               break;
-            case "PAIENT":
+            case "PATIENT":
               navigate("/patient");
               break;
             case "DOCTOR":

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { List, Row, Col, Card, Button, Table, TableProps } from "antd";
+import { List, Row, Col, Card, Button, Table, TableProps, Empty } from "antd";
 import UserImage from "../UserImage";
 
 import "./index.css";
@@ -35,13 +35,14 @@ interface Medication {
   medicationName: string;
   dosage: string;
   prescriptionDate: string;
-  allergy: boolean;
-  adverseReaction: string;
+  allergies: string;
+  refillHistory: string;
+  adverseReactions: string;
 }
 
 interface Immunization {
-  vaccineName: string;
-  administrationDate: string;
+  vaccinationName: string;
+  adminsitrationDate: string;
   reaction: string;
 }
 
@@ -53,10 +54,10 @@ interface ClinicalNote {
 }
 
 interface MedicalHistory {
-  pastConditions: string[];
-  chronicIllnesses: string[];
-  surgicalHistory: string[];
-  familyMedicalHistory: string[];
+  pastCondition: string;
+  chronicIllness: string;
+  surgicalHistory: string;
+  familyMedicalHistory: string;
 }
 
 interface Insurance {
@@ -70,6 +71,7 @@ interface Procedure {
   outcome: string;
   anesthesiaRecords: string;
 }
+
 const medicationColumns: TableProps<Medication>["columns"] = [
   {
     title: "Prescription Date",
@@ -91,13 +93,13 @@ const medicationColumns: TableProps<Medication>["columns"] = [
   },
   {
     title: "Allergy",
-    dataIndex: "allergy",
+    dataIndex: "allergies",
     key: "allergy",
     width: "20%",
   },
   {
     title: "Adverse Reaction",
-    dataIndex: "adverseReaction",
+    dataIndex: "adverseReactions",
     key: "adverseReaction",
     width: "20%",
   },
@@ -106,13 +108,13 @@ const medicationColumns: TableProps<Medication>["columns"] = [
 const immunizationColumns: TableProps<Immunization>["columns"] = [
   {
     title: "Vaccine Name",
-    dataIndex: "vaccineName",
+    dataIndex: "vaccinationName",
     key: "vaccineName",
     width: "30%",
   },
   {
     title: "Administration Date",
-    dataIndex: "administrationDate",
+    dataIndex: "adminsitrationDate",
     key: "administrationDate",
     width: "30%",
   },
@@ -153,21 +155,15 @@ const clinicalNotesColumns: TableProps<ClinicalNote>["columns"] = [
 
 const medicalHistoryColumns: TableProps<MedicalHistory>["columns"] = [
   {
-    title: "Past Conditions",
-    dataIndex: "pastConditions",
+    title: "Past Condition",
+    dataIndex: "pastCondition",
     key: "pastConditions",
     width: "25%",
   },
   {
-    title: "Chronic Illnesses",
-    dataIndex: "chronicIllnesses",
+    title: "Chronic Illness",
+    dataIndex: "chronicIllness",
     key: "chronicIllnesses",
-    width: "25%",
-  },
-  {
-    title: "Surgical History",
-    dataIndex: "surgicalHistory",
-    key: "surgicalHistory",
     width: "25%",
   },
   {
@@ -198,12 +194,9 @@ const labTestColumns: TableProps<LabTest>["columns"] = [
     width: "30%",
   },
 ];
-interface ElectronicMedicalRecordProps {
-  patientId: number; // Assuming you might load data based on a patient ID
-}
 
 interface ElectronicMedicalRecordProps {
-  patientId: number;
+  patientId: number; // Assuming you might load data based on a patient ID
 }
 
 const ElectronicMedicalRecord: React.FC<ElectronicMedicalRecordProps> = ({
@@ -226,7 +219,7 @@ const ElectronicMedicalRecord: React.FC<ElectronicMedicalRecordProps> = ({
   useEffect(() => {
     fetchData();
   }, [patientId]);
-
+  //fetch patient data by email
   const fetchData = async () => {
     try {
       // Fetch patient data
@@ -244,7 +237,6 @@ const ElectronicMedicalRecord: React.FC<ElectronicMedicalRecordProps> = ({
           medicalHistoryResponse,
           insuranceResponse,
           planResponse,
-          // other responses
         ] = await Promise.all([
           getAllVitalSignsByEmrId(emrId),
           getAllLabTestsByEmrId(emrId),
@@ -254,7 +246,6 @@ const ElectronicMedicalRecord: React.FC<ElectronicMedicalRecordProps> = ({
           getMedicalHistoryByEmrId(emrId),
           getInsuranceByEmrId(emrId),
           getAllPlanByEmrId(emrId),
-          // other promises
         ]);
 
         setVitalSigns(vitalSignsResponse.data);
@@ -265,7 +256,6 @@ const ElectronicMedicalRecord: React.FC<ElectronicMedicalRecordProps> = ({
         setMedicalHistory(medicalHistoryResponse.data);
         setInsurance(insuranceResponse.data);
         setProcedures(planResponse.data);
-        // set other states
       } else {
         console.error("EMR ID is missing from the patient data");
       }
@@ -274,11 +264,10 @@ const ElectronicMedicalRecord: React.FC<ElectronicMedicalRecordProps> = ({
     }
   };
 
-  // Render Function
-  const renderListItems = (
-    items: any[],
-    renderItem: (item: any) => JSX.Element
-  ) => <List dataSource={items} renderItem={renderItem} />;
+  // Render blank component if patientData is null
+  if (!patientData) {
+    return <Empty description="No patient data available" />;
+  }
 
   return (
     <>
@@ -286,17 +275,21 @@ const ElectronicMedicalRecord: React.FC<ElectronicMedicalRecordProps> = ({
         <Card className="mb-3">
           <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
             <Col className="gutter-row" span={6}>
-              {/* <UserImage userData={patientData} /> */}
+              {/* {patientData.image ? (
+                <UserImage userData={patientData} />
+              ) : (
+                <img src="https://via.placeholder.com/150" alt="User" />
+              )} */}
             </Col>
             <Col className="gutter-row" span={6}>
               <div className="mb-2">
-                <span className="fw-bold">Name :</span> {patientData?.firstName}{" "}
+                <span className="fw-bold">Name :</span> {patientData.firstName}{" "}
               </div>
               <div className="mb-2">
-                <span className="fw-bold">Gender :</span> {patientData?.gender}
+                <span className="fw-bold">Gender :</span> {patientData.gender}
               </div>
               <div className="mb-2">
-                <span className="fw-bold"> Age :</span> {patientData?.birthday}
+                <span className="fw-bold"> Age :</span> {patientData.birthday}
               </div>
               <div>
                 <p className="fw-bold">Insurance details :</p>
