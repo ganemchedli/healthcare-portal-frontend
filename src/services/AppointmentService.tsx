@@ -10,7 +10,7 @@ export const getAppointmentsByDoctorId = async (doctorId: number) =>
 export const getAppointmentsByPatientId = async (patientId: number) =>
   axios.get("appointment/patient/" + patientId);
 
-export const getAllAppointments = async () => axios.get("appointment/all");
+export const getAllAppointments = () => axios.get("appointment/all");
 export const updateAppointment = async (id: any, updatedFields: any) =>
   axios.put("appointment/update/" + id, updatedFields);
 export const deleteAppointment = async (id: any) =>

@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
-import { deleteUser, listUsers } from "../../services/UserServices";
+import {
+  deleteAppointment,
+  getAllAppointments,
+} from "../../services/AppointmentService";
 import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPenToSquare, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import ModalComponent from "../Modal"; // adjust the path as necessary
 import AddUserComponent from "../AddUser";
-import UpdateUserComponent from "../UpdateUser";
 import "./index.css";
 interface Appointment {
   id: number;
@@ -16,7 +18,7 @@ interface Appointment {
 }
 
 const ListAppointments: React.FC = () => {
-  const [appointments, setAppointments] = useState<User[]>([]);
+  const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [modalContent, setModalContent] = useState<React.ReactNode | null>(
     null
   );
@@ -24,7 +26,7 @@ const ListAppointments: React.FC = () => {
   const navigator = useNavigate();
 
   useEffect(() => {
-    getAllUsers();
+    fetchAllAppointments();
   }, []);
 
   const openModalWithComponent = (component: React.ReactNode) => {
@@ -35,38 +37,32 @@ const ListAppointments: React.FC = () => {
     setModalContent(null);
   };
 
-  const getAllAppointments = async () => {
-    await getAllAppointments()
-      .then((response) => {
+  const fetchAllAppointments = async () => {
+    try {
+      const response = await getAllAppointments();
+      if (response && response.data) {
         setAppointments(response.data);
-      })
-      .catch((error) => console.log(error));
+      } else {
+        console.error("Unexpected response structure:", response);
+      }
+    } catch (error) {
+      console.error("Failed to fetch appointments:", error);
+    }
   };
 
-  function removeUser(id: any) {
-    console.log(id);
-    deleteUser(id)
-      .then((response) => {
-        getAllUsers();
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }
+  const removeAppointment = async (id: number) => {
+    try {
+      await deleteAppointment(id);
+      fetchAllAppointments();
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <div className={`container ${modalContent ? "blur-background" : ""}`}>
       <h2 className="">Manage users</h2>
       <div className="text-end">
-        {/* <button className="btn btn-primary mb-2" onClick={openModal}>
-          Add User
-        </button> */}
-        <button
-          className=""
-          onClick={() => openModalWithComponent(<AddUserComponent />)}
-        >
-          Add user
-        </button>
         <ModalComponent
           isOpen={modalContent !== null}
           onRequestClose={closeModal}
@@ -77,42 +73,21 @@ const ListAppointments: React.FC = () => {
       <table className="table table-striped table-bordred">
         <thead>
           <tr>
-            <th>User ID</th>
-            <th>FirstName</th>
-            <th>Lastname</th>
-            <th>Email</th>
-            <th>Phone number</th>
-            <th>Birthday</th>
-            <th>State</th>
-            <th>City</th>
-            <th>Zip code</th>
-            <th>Role</th>
+            <th>Id</th>
+            <th>Patient Id</th>
+            <th>Doctor Id</th>
+            <th>Appointment DateTime</th>
+            <th>Status</th>
           </tr>
         </thead>
         <tbody>
-          {users.map((user) => (
-            <tr key={user.id}>
-              <td>{user.id}</td>
-              <td>{user.firstName}</td>
-              <td>{user.lastName}</td>
-              <td>{user.email}</td>
-              <td>{user.phoneNumber}</td>
-              <td>{user.birthday}</td>
-              <td>{user.state}</td>
-              <td>{user.city}</td>
-              <td>{user.zipCode}</td>
-              <td>{user.role}</td>
-
+          {appointments.map((appointment) => (
+            <tr key={appointment.id}>
+              <td>{appointment.patientId}</td>
+              <td>{appointment.doctorId}</td>
+              <td>{appointment.appointmentTime}</td>
+              <td>{appointment.status}</td>
               <td>
-                <button
-                  onClick={() =>
-                    openModalWithComponent(<UpdateUserComponent id={user.id} />)
-                  }
-                >
-                  <span>
-                    <FontAwesomeIcon icon={faPenToSquare} />
-                  </span>
-                </button>
                 <ModalComponent
                   isOpen={modalContent !== null}
                   onRequestClose={closeModal}
@@ -120,7 +95,7 @@ const ListAppointments: React.FC = () => {
                   {modalContent}
                 </ModalComponent>
                 <button
-                  onClick={() => removeUser(user.id)}
+                  onClick={() => removeAppointment(appointment.id)}
                   style={{ marginLeft: "10px" }}
                 >
                   <span>

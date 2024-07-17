@@ -12,6 +12,7 @@ import Admin from "./pages/admin/admin";
 import AddUserComponent from "./component/AddUser";
 import ListUsersComponent from "./component/ListUsersComponent";
 import Profile from "./component/User/profile";
+import ListAppointments from "./component/ListAppointments";
 import Doctor from "./pages/doctor/doctor";
 import Patient from "./pages/patient/patient";
 import Nurse from "./pages/nurse/nurse";
@@ -44,6 +45,7 @@ function App() {
             element={<ListUsersComponent></ListUsersComponent>}
           />
           <Route path="profile" element={<Profile />} />
+          <Route path="appointments" element={<ListAppointments />}></Route>
         </Route>
       </Routes>
     </Router>

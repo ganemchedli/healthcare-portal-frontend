@@ -59,12 +59,23 @@ const SidebarAdmin: React.FC<SidebarProps> = () => {
             </a>
           </li>
           <li
-            className={activeItem === "Projects" ? "active" : ""}
-            onClick={() => handleItemClick("Projects")}
+            className={activeItem === "ListUsers" ? "active" : ""}
+            onClick={() => handleItemClick("ListUsers")}
           >
             <a href="#" className="text-decoration-none px-3 py-2 d-block">
               <FontAwesomeIcon icon={faList} />{" "}
               <RouterNavLink to="/admin/users">Manage Users</RouterNavLink>
+            </a>
+          </li>
+          <li
+            className={activeItem === "ListAppointments" ? "active" : ""}
+            onClick={() => handleItemClick("ListAppointments")}
+          >
+            <a href="#" className="text-decoration-none px-3 py-2 d-block">
+              <FontAwesomeIcon icon={faList} />{" "}
+              <RouterNavLink to="/admin/appointments">
+                Manage Appointments
+              </RouterNavLink>
             </a>
           </li>
         </ul>
