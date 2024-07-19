@@ -291,7 +291,6 @@ const SignupForm: React.FC = () => {
                   <option value="PATIENT">Patient</option>
                   <option value="DOCTOR">Doctor</option>
                   <option value="NURSE">Nurse</option>
-                  <option value="ADMIN">ADMIN</option>
                 </select>
               </div>
               {/* ******************* */}

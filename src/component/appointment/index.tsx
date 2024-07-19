@@ -4,7 +4,6 @@ import {
   Button,
   Radio,
   RadioChangeEvent,
-  Avatar,
   Modal,
   Form,
   Input,
@@ -64,14 +63,20 @@ const Appointments: React.FC = () => {
   const [filter, setFilter] = useState<
     "All" | "COMPLETED" | "SCHEDULED" | "CANCELED"
   >("All");
+  const [selectedAppointmentId, setSelectedAppointmentId] = useState<
+    number | null
+  >(null);
+  const [postponeDate, setPostponeDate] = useState<string>("");
+  const [isPostponeModalVisible, setPostponeModalVisible] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [refreshKey, setRefreshKey] = useState(0);
 
   const userRole = localStorage.getItem("User role");
   const userId = localStorage.getItem("userId");
 
   useEffect(() => {
     fetchedAppointments(userId);
-  }, [userId]);
+  }, [userId, refreshKey]);
 
   useEffect(() => {
     setFilteredAppointments(
@@ -81,11 +86,16 @@ const Appointments: React.FC = () => {
     );
     fetchPatientsData();
     fetchDoctorsData();
-    console.log("Doctors Data:", doctorsData);
+    // console.log("Doctors Data:", doctorsData);
   }, [appointments, filter]);
 
   const showModal = () => {
     setIsModalVisible(true);
+  };
+
+  const showModal2 = (appointmentId: number) => {
+    setSelectedAppointmentId(appointmentId);
+    setPostponeModalVisible(true);
   };
   const fetchedAppointments = async (id: any) => {
     try {
@@ -100,14 +110,26 @@ const Appointments: React.FC = () => {
       console.error("Failed to fetch appointments:", error);
     }
   };
-  const fetchPatientData = async (email: string): Promise<void> => {
+
+  const fetchPatientData = async (email: string): Promise<Patient | null> => {
     try {
-      const fetchedPatient = await getPatientByEmailByClient(email);
-      setPatientData(fetchedPatient);
-    } catch (err) {
-      console.error(err);
+      const result = await getPatientByEmailByClient(email);
+      setPatientData(result);
+      return result; // Ensure that this returns the fetched patient data
+    } catch (error) {
+      console.error("Error fetching patient data:", error);
+      return null;
     }
   };
+  // const fetchPatientData = async (email: string): Promise<void> => {
+  //   try {
+  //     const fetchedPatientPromise = await getPatientByEmailByClient(email);
+  //     const fetchedPatient = await Promise.resolve(fetchedPatientPromise);
+  //     setPatientData(fetchedPatient);
+  //   } catch (err) {
+  //     console.error(err);
+  //   }
+  // };
 
   const fetchDoctorsData = async (): Promise<void> => {
     try {
@@ -121,10 +143,17 @@ const Appointments: React.FC = () => {
   };
   const fetchPatientsData = async (): Promise<void> => {
     try {
-      appointments.forEach(async (appointment) => {
+      // Map over the appointments to create an array of promises
+      const patientPromises = appointments.map(async (appointment) => {
         const fetchedPatient = await getUser(appointment.patientId);
-        setPatientsData([...patientsData, fetchedPatient.data]);
+        return fetchedPatient.data;
       });
+
+      // Await all promises to resolve
+      const patients = await Promise.all(patientPromises);
+
+      // Update the state once with all fetched data
+      setPatientsData(patients);
     } catch (err) {
       console.error(err);
     }
@@ -135,11 +164,20 @@ const Appointments: React.FC = () => {
       const response = await updateAppointment(id, {
         status: "COMPLETED",
       });
-      console.log("Appointment updated:", response);
-      notification.success({
-        message: "Appointment Updated",
-        description: "The appointment have been updated successfully.",
-      });
+      if (response.status === 200) {
+        // Update the appointment status in the local state
+        setAppointments((prevAppointments) =>
+          prevAppointments.map((appointment) =>
+            appointment.id === id
+              ? { ...appointment, status: "COMPLETED" }
+              : appointment
+          )
+        );
+        notification.success({
+          message: "Appointment Updated",
+          description: "The appointment has been updated successfully.",
+        });
+      }
     } catch (err) {
       notification.error({
         message: "Failed to update appointment",
@@ -148,26 +186,22 @@ const Appointments: React.FC = () => {
       console.error(err);
     }
   };
-
   const handleOk = async () => {
     try {
       setIsModalVisible(false);
       // Ensure patient data is fetched before proceeding
-      await fetchPatientData(email);
+      const fetchedPatientData = await fetchPatientData(email);
 
-      if (patientData) {
+      if (fetchedPatientData) {
         const newAppointment = {
-          patientId: patientData.id,
+          patientId: fetchedPatientData.id,
           doctorId: Number(userId),
           appointmentTime: appointmentTime,
           status: status,
         };
-        console.log("Appointment object", newAppointment);
         try {
           const response = await createAppointment(newAppointment);
-          console.log("Appointment created:", response);
           if (response.status === 200) {
-            console.log("Appointment created successfully");
             setAppointments([...appointments, response.data]);
           }
         } catch (err) {
@@ -182,6 +216,17 @@ const Appointments: React.FC = () => {
   const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(event.target.value);
   };
+
+  const handleAppointmentStatusChange = (
+    value: "COMPLETED" | "SCHEDULED" | "CANCELED"
+  ) => {
+    setStatus(value);
+  };
+
+  const handleCancel = () => {
+    setIsModalVisible(false);
+  };
+
   const handleAppointmentTimeChange = (
     value: moment.Moment | null,
     dateString: string
@@ -189,16 +234,39 @@ const Appointments: React.FC = () => {
     if (value) {
       // Update the state with the formatted date string
       setAppointmentTime(dateString);
-      console.log("Updated Appointment Time: ", dateString);
     }
   };
-  const handleAppointmentStatusChange = (
-    event: React.ChangeEvent<HTMLInputElement>
+
+  const handlePostponeDateChange = (
+    value: moment.Moment | null,
+    dateString: string
   ) => {
-    setStatus(event.target.value as "COMPLETED" | "SCHEDULED" | "CANCELED");
+    if (value) {
+      setPostponeDate(dateString);
+    }
   };
-  const handleCancel = () => {
-    setIsModalVisible(false);
+
+  const handlePostpone = async () => {
+    if (selectedAppointmentId) {
+      try {
+        const response = await updateAppointment(selectedAppointmentId, {
+          appointmentTime: postponeDate,
+        });
+        console.log("Appointment postponed:", response);
+        notification.success({
+          message: "Appointment Postponed",
+          description: "The appointment date has been successfully postponed.",
+        });
+        setIsModalVisible(false);
+        setRefreshKey((prevKey) => prevKey + 1);
+      } catch (error) {
+        notification.error({
+          message: "Failed to postpone appointment",
+          description: "There was an error postponing the appointment.",
+        });
+        console.error(error);
+      }
+    }
   };
 
   return (
@@ -250,12 +318,7 @@ const Appointments: React.FC = () => {
                   </Button>,
                   <Button
                     key="postpone"
-                    onClick={() =>
-                      console.log(
-                        "Postponing appointment with ID:",
-                        appointment.id
-                      )
-                    }
+                    onClick={() => showModal2(appointment.id)}
                   >
                     Postpone
                   </Button>,
@@ -263,14 +326,12 @@ const Appointments: React.FC = () => {
               >
                 <List.Item.Meta
                   avatar={patient && <UserImage userData={patient} />}
-                  title={`Appointment ID ${appointment.id}`}
-                  description={`Patient ID: ${
-                    appointment.patientId
-                  }, Doctor ID: ${appointment.doctorId} - Date: ${moment(
-                    appointment.appointmentTime
-                  ).format("MMMM Do YYYY, h:mm a")} - Status: ${
-                    appointment.status
-                  }`}
+                  title={`${
+                    patient?.firstName + " " + patient?.lastName
+                  } - Date: ${moment(appointment.appointmentTime).format(
+                    "MMMM Do YYYY, h:mm a"
+                  )}`}
+                  description={`Status: ${appointment.status}`}
                 />
               </List.Item>
             );
@@ -326,6 +387,27 @@ const Appointments: React.FC = () => {
               <Select.Option value="COMPLETED">Completed</Select.Option>
               <Select.Option value="CANCELED">Canceled</Select.Option>
             </Select>
+          </Form.Item>
+        </Form>
+      </Modal>
+      <Modal
+        title="Postpone Appointment"
+        visible={isPostponeModalVisible}
+        onOk={handlePostpone}
+        onCancel={() => setPostponeModalVisible(false)}
+      >
+        <Form layout="vertical">
+          <Form.Item
+            label="New Date and Time"
+            name="postponeDate"
+            rules={[
+              {
+                required: true,
+                message: "Please select the new date and time!",
+              },
+            ]}
+          >
+            <DatePicker showTime onChange={handlePostponeDateChange} />
           </Form.Item>
         </Form>
       </Modal>
