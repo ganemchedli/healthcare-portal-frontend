@@ -1,161 +1,91 @@
-import React, { useState } from "react";
-import { Input, Button, List, Avatar } from "antd";
-import {
-  SendOutlined,
-  SmileOutlined,
-  PaperClipOutlined,
-} from "@ant-design/icons";
-import "./index.css"; // Make sure to include this for custom styles
+import React, { useEffect, useState } from "react";
+import SockJS from "sockjs-client";
+import Stomp from "stompjs";
+import { List, Input, Button } from "antd";
+import { MessageOutlined } from "@ant-design/icons";
 
-// Define interfaces for your messages and conversations
-interface User {
+interface ChatMessage {
   id: string;
-  name: string;
-  avatar: string;
-}
-
-interface Message {
-  id: string;
-  text: string;
+  chatId: string;
   senderId: string;
+  recipientId: string;
+  content: string;
   timestamp: Date;
 }
 
-interface Conversation {
-  id: string;
-  participants: User[];
-  messages: Message[];
-  lastMessage: string;
-  lastMessageTime: Date;
-}
-
-// Sample data
-const users: User[] = [
-  {
-    id: "u1",
-    name: "John Doe",
-    avatar: "https://randomuser.me/api/portraits/men/32.jpg",
-  },
-  {
-    id: "u2",
-    name: "Jane Smith",
-    avatar: "https://randomuser.me/api/portraits/women/44.jpg",
-  },
-];
-
-const sampleConversations: Conversation[] = [
-  {
-    id: "c1",
-    participants: [users[0], users[1]],
-    messages: [
-      {
-        id: "m1",
-        text: "Hi, how can I help you today?",
-        senderId: "u1",
-        timestamp: new Date(Date.now() - 10000000),
-      },
-      {
-        id: "m2",
-        text: "I have a question about my recent diagnosis.",
-        senderId: "u2",
-        timestamp: new Date(Date.now() - 9000000),
-      },
-      {
-        id: "m3",
-        text: "Of course, what would you like to know?",
-        senderId: "u1",
-        timestamp: new Date(Date.now() - 8000000),
-      },
-    ],
-    lastMessage: "Of course, what would you like to know?",
-    lastMessageTime: new Date(Date.now() - 8000000),
-  },
-];
+const { TextArea } = Input;
 
 const Messaging: React.FC = () => {
-  const [conversations, setConversations] =
-    useState<Conversation[]>(sampleConversations);
-  const [activeConversation, setActiveConversation] =
-    useState<Conversation | null>(null);
-  const [newMessage, setNewMessage] = useState<string>("");
+  const [stompClient, setStompClient] = useState<any>(null);
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [newMessage, setNewMessage] = useState("");
+  const [userId, setUserId] = useState("1"); // Example senderId
+  const [recipientId, setRecipientId] = useState("2"); // Example recipientId
+
+  const connect = () => {
+    const socket = new SockJS("http://localhost:8088/chat-websocket");
+    const client = Stomp.over(socket);
+
+    client.connect({}, () => {
+      setStompClient(client);
+      client.subscribe(`/user/${recipientId}/queue/messages`, (data: any) => {
+        onMessageReceived(JSON.parse(data.body));
+      });
+    });
+  };
+
+  useEffect(() => {
+    connect();
+    return () => {
+      stompClient?.disconnect();
+    };
+  }, []);
+
+  const onMessageReceived = (message: ChatMessage) => {
+    setMessages((prevMessages) => [...prevMessages, message]);
+  };
 
   const sendMessage = () => {
-    if (activeConversation && newMessage.trim()) {
-      const newMessageObj: Message = {
-        id: "m" + Math.random().toString(16).slice(2),
-        text: newMessage,
-        senderId: "u1",
+    if (stompClient) {
+      const chatMessage: ChatMessage = {
+        id: "",
+        chatId: "",
+        senderId: userId,
+        recipientId: recipientId,
+        content: newMessage,
         timestamp: new Date(),
       };
-      // Update conversations here
+
+      stompClient.send("/app/chat", {}, JSON.stringify(chatMessage));
       setNewMessage("");
     }
   };
 
   return (
-    <div className="messenger">
-      <div className="chat-list">
-        <List
-          itemLayout="horizontal"
-          dataSource={conversations}
-          renderItem={(item) => (
-            <List.Item onClick={() => setActiveConversation(item)}>
-              <List.Item.Meta
-                avatar={
-                  <Avatar
-                    src={item.participants.find((p) => p.id !== "u1")?.avatar}
-                  />
-                }
-                title={item.participants.find((p) => p.id !== "u1")?.name}
-                description={item.lastMessage}
-              />
-            </List.Item>
-          )}
-        />
-      </div>
-      <div className="chat-window">
-        {activeConversation ? (
-          <List
-            dataSource={activeConversation.messages}
-            renderItem={(message) => (
-              <List.Item>
-                <List.Item.Meta
-                  avatar={
-                    <Avatar
-                      src={
-                        users.find((user) => user.id === message.senderId)
-                          ?.avatar
-                      }
-                    />
-                  }
-                  title={<span>{message.text}</span>}
-                  description={message.timestamp.toLocaleTimeString()}
-                />
-              </List.Item>
-            )}
-          />
-        ) : (
-          <p>Select a conversation to start messaging</p>
+    <div>
+      <List
+        itemLayout="horizontal"
+        dataSource={messages}
+        renderItem={(item) => (
+          <List.Item>
+            <List.Item.Meta
+              title={`From ${item.senderId}`}
+              description={`At ${item.timestamp.toLocaleTimeString()}`}
+              avatar={<MessageOutlined />}
+            />
+            <div>{item.content}</div>
+          </List.Item>
         )}
-        <Input
-          value={newMessage}
-          onChange={(e) => setNewMessage(e.target.value)}
-          placeholder="Type your message here..."
-          suffix={
-            <>
-              <SmileOutlined
-                style={{ color: "rgba(0,0,0,.45)", marginRight: "10px" }}
-              />
-              <PaperClipOutlined
-                style={{ color: "rgba(0,0,0,.45)", marginRight: "10px" }}
-              />
-              <Button icon={<SendOutlined />} onClick={sendMessage}>
-                Send
-              </Button>
-            </>
-          }
-        />
-      </div>
+      />
+      <TextArea
+        rows={4}
+        value={newMessage}
+        onChange={(e) => setNewMessage(e.target.value)}
+        placeholder="Type a new message..."
+      />
+      <Button type="primary" onClick={sendMessage} style={{ marginTop: 10 }}>
+        Send
+      </Button>
     </div>
   );
 };

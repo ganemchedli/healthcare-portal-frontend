@@ -77,7 +77,7 @@ const Doctor: React.FC<DoctorProps> = () => {
 
   const handleLogout = () => {
     logout();
-    navigate("/");
+    navigate("/login");
   };
 
   const getDoctorData = () => {
@@ -151,7 +151,7 @@ const Doctor: React.FC<DoctorProps> = () => {
           type="primary"
           icon={<LogoutOutlined />}
           onClick={handleLogout}
-          style={{ marginTop: 300 , marginLeft: 16 }}
+          style={{ marginTop: 300, marginLeft: 16 }}
         >
           Logout
         </Button>
