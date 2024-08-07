@@ -1,4 +1,73 @@
-.messenger {
+/* Add your CSS styles here */
+.app {
+  font-family: Arial, sans-serif;
+  height: 100vh;
+}
+
+.hidden {
+  display: none;
+}
+
+.user-form {
+  margin: 20px;
+  padding: 20px;
+  background: #fff;
+  border-radius: 5px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.site-layout-background {
+  background: #fff;
+  padding: 20px;
+}
+
+.users-list-container {
+  margin-bottom: 20px;
+}
+
+.user-item {
+  cursor: pointer;
+}
+
+.user-item.active {
+  background-color: #f0f0f0;
+}
+
+.message {
+  margin: 10px 0;
+  padding: 10px;
+  border-radius: 5px;
+  max-width: 60%;
+}
+
+.message.sender {
+  background-color: #e6f7ff;
+  margin-left: auto;
+}
+
+.message.receiver {
+  background-color: #f0f0f0;
+  margin-right: auto;
+}
+
+.message-form {
+  display: flex;
+  padding: 10px;
+  background: #fff;
+  border-top: 1px solid #f0f0f0;
+}
+
+.message-form .ant-form-item {
+  flex: 1;
+  margin: 0;
+}
+
+.message-form .ant-form-item:last-child {
+  margin-left: 10px;
+  flex: 0;
+}
+
+/* .messenger {
   display: flex;
   height: 100vh;
 }
@@ -19,4 +88,4 @@
   margin-top: auto;
   padding: 10px;
   background: #f0f0f0;
-}
+} */

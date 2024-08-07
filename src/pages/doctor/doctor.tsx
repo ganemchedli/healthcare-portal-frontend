@@ -30,7 +30,6 @@ const Doctor: React.FC<DoctorProps> = () => {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
   const [doctorData, setDocotorData] = useState<any>({});
-  const [imageUrl, setImageUrl] = useState<any>("");
   const navigate = useNavigate();
   // Function to handle menu item click
   const onMenuClick = (key: string) => {

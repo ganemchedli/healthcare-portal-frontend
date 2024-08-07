@@ -1,37 +1,35 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+//Ant design components
 import {
   FolderAddOutlined,
   UserOutlined,
   CalendarOutlined,
   MessageOutlined,
   LogoutOutlined,
+  LoadingOutlined,
 } from "@ant-design/icons";
-
-import { Button, Layout, Menu, theme, Avatar } from "antd";
+import { Button, Layout, Menu, theme, Spin } from "antd";
+//services
+import { logout } from "../../services/AuthServices";
+import { getUser } from "../../services/UserServices";
+//components
 import ListOfPatients from "../../component/Listofpatients";
 import Appointments from "../../component/Appointment";
-import ElectronicMedicalRecord from "../../component/Electronicmedicalrecord";
+import EmrForm from "../../component/EmrForm";
 import Messaging from "../../component/Messaging";
-import { logout } from "../../services/AuthServices";
-interface DoctorProps {
-  // Add any props you need for the component here
-}
+import UserImage from "../../component/UserImage";
 const { Header, Sider, Content } = Layout;
 
-const patientInfo: any = {
-  name: "Alex Johnson",
-  age: 29,
-  gender: "Male",
-  patientImageUrl: "https://randomuser.me/api/portraits/men/29.jpg", // URL from a public API for placeholder images
-};
-
-const Nurse: React.FC<DoctorProps> = () => {
+interface NurseProps {
+  // Add any props you need for the component here
+}
+const Nurse: React.FC<NurseProps> = () => {
   const [activeMenu, setActiveMenu] = useState("1"); // State to track active menu item
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
-
+  const [nurseData, setNurseData] = useState<any>({});
   const navigate = useNavigate();
   // Function to handle menu item click
   const onMenuClick = (key: string) => {
@@ -40,6 +38,12 @@ const Nurse: React.FC<DoctorProps> = () => {
 
   // Render different components based on active menu
   const renderContent = () => {
+    if (!nurseData) {
+      return (
+        <Spin indicator={<LoadingOutlined style={{ fontSize: 48 }} spin />} />
+      ); // or a loading spinner
+    }
+
     switch (activeMenu) {
       case "1":
         return (
@@ -50,7 +54,7 @@ const Nurse: React.FC<DoctorProps> = () => {
       case "2":
         return (
           <div>
-            <ElectronicMedicalRecord patientId="123" />
+            <EmrForm />
           </div>
         );
       case "3":
@@ -72,8 +76,22 @@ const Nurse: React.FC<DoctorProps> = () => {
 
   const handleLogout = () => {
     logout();
-    navigate("/");
+    navigate("/login");
   };
+
+  const getNurseData = () => {
+    const idString = localStorage.getItem("userId");
+    const id = parseInt(idString!);
+    getUser(id)
+      .then((response) => {
+        setNurseData(response.data);
+      })
+      .catch((error) => console.log(error));
+  };
+
+  useEffect(() => {
+    getNurseData();
+  }, []);
   return (
     <Layout hasSider>
       <Sider
@@ -88,16 +106,13 @@ const Nurse: React.FC<DoctorProps> = () => {
         trigger={null}
       >
         <div className="demo-logo-vertical" style={{ padding: 20 }}>
-          <img
-            src="src\assets\photo.jpg"
-            alt="User"
-            style={{ width: "100%", borderRadius: "100%" }}
-          />
+          <UserImage userData={nurseData} />
+
           {/* <Avatar src={"src/assets/photo.jpg"} size={}></Avatar> */}
           <div className="pt-4 fw-bold text-center text-white">
-            Name of the doctor
+            {nurseData.firstName + " " + nurseData.lastName}
           </div>
-          <div className="text-center text-white">DOCTOR</div>
+          <div className="text-center text-white">Nurse</div>
         </div>
         <Menu
           theme="dark"
@@ -135,7 +150,7 @@ const Nurse: React.FC<DoctorProps> = () => {
           type="primary"
           icon={<LogoutOutlined />}
           onClick={handleLogout}
-          style={{ marginTop: 200, marginLeft: 16 }}
+          style={{ marginTop: 300, marginLeft: 16 }}
         >
           Logout
         </Button>

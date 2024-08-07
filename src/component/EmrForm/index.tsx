@@ -41,22 +41,22 @@ const EmrForm: React.FC = () => {
   };
 
   useEffect(() => {
-    const initializeEmr = async () => {
-      try {
-        const doctorId = localStorage.getItem("userId");
-        const emrData = await createEmr(doctorId); // This function should fetch or generate EMR data
-        setEmr(emrData.data);
-      } catch (error) {
-        console.error("Failed to create EMR:", error);
-        notification.error({
-          message: "Error",
-          description: "Failed to initialize EMR data.",
-        });
-      }
-    };
-
     initializeEmr();
   }, []); // Empty dependency array ensures this runs only once
+
+  const initializeEmr = async () => {
+    try {
+      const doctorId = localStorage.getItem("userId");
+      const emrData = await createEmr(doctorId); // This function should fetch or generate EMR data
+      setEmr(emrData.data);
+    } catch (error) {
+      console.error("Failed to create EMR:", error);
+      notification.error({
+        message: "Error",
+        description: "Failed to initialize EMR data.",
+      });
+    }
+  };
 
   const handleSubmit = () => {
     notification.success({

@@ -24,8 +24,11 @@ interface Patient {
   image: string;
   electronicMedicalRecordId: number;
 }
-
-const ListOfPatients: React.FC = () => {
+interface Props {
+  doctorId: string;
+  nurseId: string;
+}
+const ListOfPatients: React.FC<Props> = () => {
   const [patients, setPatients] = useState<Patient[]>([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [email, setEmail] = useState<String | null>(null);
