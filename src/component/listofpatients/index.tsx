@@ -2,7 +2,12 @@ import React, { useEffect, useState } from "react";
 
 import { List, Button, Modal } from "antd";
 
-import { getAllPatients } from "../../services/EmrService";
+import {
+  getAllPatients,
+  getEmrByDoctorId,
+  getEmrByNurseId,
+  getPatientByEmrId,
+} from "../../services/EmrService";
 import UserImage from "../UserImage";
 import ElectronicMedicalRecord from "../Electronicmedicalrecord";
 
@@ -25,19 +30,50 @@ interface Patient {
   electronicMedicalRecordId: number;
 }
 interface Props {
-  doctorId: string;
-  nurseId: string;
+  doctorId: Number;
+  nurseId: Number;
 }
-const ListOfPatients: React.FC<Props> = () => {
+const ListOfPatients: React.FC<Props> = (Props: Props) => {
+  const { doctorId, nurseId } = Props;
   const [patients, setPatients] = useState<Patient[]>([]);
+  const [emrs, setEmrs] = useState<any[]>([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [email, setEmail] = useState<String | null>(null);
 
   useEffect(() => {
-    getAllPatients().then((response) => {
-      setPatients(response.data);
-    });
+    fetchEmrsAndPatients();
   }, []);
+
+  const fetchEmrsAndPatients = async () => {
+    let emrResponse;
+    if (doctorId === 0) {
+      emrResponse = await getEmrByNurseId(nurseId);
+    } else {
+      emrResponse = await getEmrByDoctorId(doctorId);
+    }
+
+    const emrsData = emrResponse.data;
+    setEmrs(emrsData);
+
+    if (emrsData.length > 0) {
+      const patientPromises = emrsData.map((emr: any) =>
+        getPatientByEmrId(emr.id)
+      );
+      const patientResponses = await Promise.all(patientPromises);
+
+      // Flatten and ensure unique patients
+      const allPatients = patientResponses
+        .flatMap((response) => response.data)
+        .reduce((uniquePatients, patient) => {
+          if (!uniquePatients.some((p: any) => p.id === patient.id)) {
+            uniquePatients.push(patient);
+          }
+          return uniquePatients;
+        }, [] as Patient[]);
+
+      setPatients(allPatients);
+    }
+  };
 
   const openEMR = (email: string) => {
     setEmail(email);

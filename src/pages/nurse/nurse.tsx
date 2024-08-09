@@ -19,6 +19,7 @@ import Appointments from "../../component/Appointment";
 import EmrForm from "../../component/EmrForm";
 import Messaging from "../../component/Messaging";
 import UserImage from "../../component/UserImage";
+import ViewEmr from "../../component/ViewEmr";
 const { Header, Sider, Content } = Layout;
 
 interface NurseProps {
@@ -30,6 +31,8 @@ const Nurse: React.FC<NurseProps> = () => {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
   const [nurseData, setNurseData] = useState<any>({});
+  const idString = localStorage.getItem("userId");
+  const id = parseInt(idString!);
   const navigate = useNavigate();
   // Function to handle menu item click
   const onMenuClick = (key: string) => {
@@ -48,22 +51,16 @@ const Nurse: React.FC<NurseProps> = () => {
       case "1":
         return (
           <div>
-            <ListOfPatients />
+            <ViewEmr />
           </div>
         );
       case "2":
         return (
           <div>
-            <EmrForm />
-          </div>
-        );
-      case "3":
-        return (
-          <div>
             <Appointments />
           </div>
         );
-      case "4":
+      case "3":
         return (
           <div>
             <Messaging />
@@ -80,8 +77,6 @@ const Nurse: React.FC<NurseProps> = () => {
   };
 
   const getNurseData = () => {
-    const idString = localStorage.getItem("userId");
-    const id = parseInt(idString!);
     getUser(id)
       .then((response) => {
         setNurseData(response.data);
@@ -122,26 +117,20 @@ const Nurse: React.FC<NurseProps> = () => {
             {
               key: "1",
               icon: <UserOutlined />,
-              label: "List of patients",
+              label: "View patient's emr",
               onClick: () => onMenuClick("1"),
             },
             {
               key: "2",
-              icon: <FolderAddOutlined />,
-              label: "Create a new EMR",
+              icon: <CalendarOutlined />,
+              label: "Appointments",
               onClick: () => onMenuClick("2"),
             },
             {
               key: "3",
-              icon: <CalendarOutlined />,
-              label: "Appointments",
-              onClick: () => onMenuClick("3"),
-            },
-            {
-              key: "4",
               icon: <MessageOutlined />,
               label: "Messages",
-              onClick: () => onMenuClick("4"),
+              onClick: () => onMenuClick("3"),
             },
           ]}
           style={{ flex: 1 }} // Make the menu use available space

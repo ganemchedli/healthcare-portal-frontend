@@ -30,6 +30,8 @@ const Doctor: React.FC<DoctorProps> = () => {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
   const [doctorData, setDocotorData] = useState<any>({});
+  const idString = localStorage.getItem("userId");
+  const id = parseInt(idString!);
   const navigate = useNavigate();
   // Function to handle menu item click
   const onMenuClick = (key: string) => {
@@ -48,7 +50,7 @@ const Doctor: React.FC<DoctorProps> = () => {
       case "1":
         return (
           <div>
-            <ListOfPatients />
+            <ListOfPatients doctorId={id} nurseId={0} />
           </div>
         );
       case "2":

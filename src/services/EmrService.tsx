@@ -9,6 +9,8 @@ export const createEmr = async (doctorId: any) =>
 export const getEmr = async (id: Number) => axios.get("emr/" + id);
 export const getEmrByDoctorId = async (doctorId: any) =>
   axios.get("emr/doctor/" + doctorId);
+export const getEmrByNurseId = async (nurseId: any) =>
+  axios.get("emr/nurse/" + nurseId);
 export const deleteEmr = async (id: any) => axios.delete("emr/" + id);
 //Clinical Note
 export const getAllClinicalNotesByEmrId = async (emrId: any) =>

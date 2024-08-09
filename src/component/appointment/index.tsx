@@ -16,6 +16,7 @@ import { getPatientByEmailByClient } from "../../services/EmrService";
 import {
   createAppointment,
   getAppointmentsByDoctorId,
+  getAppointmentsByNurseId,
   getAppointmentsByPatientId,
 } from "../../services/AppointmentService";
 import { getUser } from "../../services/UserServices";
@@ -43,6 +44,7 @@ interface Appointment {
   id: number;
   patientId: number;
   doctorId: number;
+  nurseId: number;
   appointmentTime: string;
   status: "COMPLETED" | "SCHEDULED" | "CANCELED";
 }
@@ -50,6 +52,7 @@ interface Appointment {
 const Appointments: React.FC = () => {
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [doctorsData, setDoctorsData] = useState<Patient[]>([]);
+  const [nursesData, setNursesData] = useState<Patient[]>([]);
   const [patientData, setPatientData] = useState<Patient>();
   const [patientsData, setPatientsData] = useState<Patient[]>([]);
   const [appointmentTime, setAppointmentTime] = useState<string>("");
@@ -85,7 +88,12 @@ const Appointments: React.FC = () => {
       )
     );
     fetchPatientsData();
-    fetchDoctorsData();
+    if (userRole === "DOCTOR") {
+      fetchDoctorsData();
+    } else {
+      fetchNursesData();
+    }
+
     // console.log("Doctors Data:", doctorsData);
   }, [appointments, filter]);
 
@@ -102,8 +110,11 @@ const Appointments: React.FC = () => {
       if (userRole === "PATIENT") {
         const response = await getAppointmentsByPatientId(id);
         setAppointments(response.data);
-      } else {
+      } else if (userRole === "DOCTOR") {
         const response = await getAppointmentsByDoctorId(id);
+        setAppointments(response.data);
+      } else {
+        const response = await getAppointmentsByNurseId(id);
         setAppointments(response.data);
       }
     } catch (error) {
@@ -121,38 +132,40 @@ const Appointments: React.FC = () => {
       return null;
     }
   };
-  // const fetchPatientData = async (email: string): Promise<void> => {
-  //   try {
-  //     const fetchedPatientPromise = await getPatientByEmailByClient(email);
-  //     const fetchedPatient = await Promise.resolve(fetchedPatientPromise);
-  //     setPatientData(fetchedPatient);
-  //   } catch (err) {
-  //     console.error(err);
-  //   }
-  // };
 
-  const fetchDoctorsData = async (): Promise<void> => {
+  const fetchDoctorsData = async () => {
     try {
-      appointments.forEach(async (appointment) => {
-        const fetchedDoctor = await getUser(appointment.doctorId);
-        setDoctorsData([...doctorsData, fetchedDoctor.data]);
-      });
+      const fetchedDoctors = await Promise.all(
+        appointments
+          .filter((appointment) => appointment.doctorId)
+          .map((appointment) => getUser(appointment.doctorId))
+      );
+      setDoctorsData(fetchedDoctors.map((doctor) => doctor.data));
     } catch (err) {
       console.error(err);
     }
   };
-  const fetchPatientsData = async (): Promise<void> => {
+
+  const fetchNursesData = async () => {
     try {
-      // Map over the appointments to create an array of promises
+      const fetchedNurses = await Promise.all(
+        appointments
+          .filter((appointment) => appointment.nurseId)
+          .map((appointment) => getUser(appointment.nurseId))
+      );
+      setNursesData(fetchedNurses.map((nurse) => nurse.data));
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const fetchPatientsData = async () => {
+    try {
       const patientPromises = appointments.map(async (appointment) => {
         const fetchedPatient = await getUser(appointment.patientId);
         return fetchedPatient.data;
       });
-
-      // Await all promises to resolve
       const patients = await Promise.all(patientPromises);
-
-      // Update the state once with all fetched data
       setPatientsData(patients);
     } catch (err) {
       console.error(err);
@@ -189,27 +202,25 @@ const Appointments: React.FC = () => {
   const handleOk = async () => {
     try {
       setIsModalVisible(false);
-      // Ensure patient data is fetched before proceeding
       const fetchedPatientData = await fetchPatientData(email);
 
       if (fetchedPatientData) {
         const newAppointment = {
           patientId: fetchedPatientData.id,
-          doctorId: Number(userId),
+          doctorId: userRole === "DOCTOR" ? Number(userId) : 0,
+          nurseId: userRole === "NURSE" ? Number(userId) : 0,
           appointmentTime: appointmentTime,
           status: status,
         };
-        try {
-          const response = await createAppointment(newAppointment);
-          if (response.status === 200) {
-            setAppointments([...appointments, response.data]);
-          }
-        } catch (err) {
-          console.error(err);
+
+        const response = await createAppointment(newAppointment);
+        if (response.status === 200) {
+          setAppointments([...appointments, response.data]);
+          setRefreshKey((prevKey) => prevKey + 1); // Trigger refresh
         }
       }
     } catch (error) {
-      console.error("Failed to fetch patient data:", error);
+      console.error("Failed to create appointment:", error);
     }
   };
 
@@ -288,6 +299,7 @@ const Appointments: React.FC = () => {
           const patient = patientsData.find(
             (p) => p.id === appointment.patientId
           );
+          const nurse = nursesData.find((n) => n.id === appointment.nurseId);
           const doctor = doctorsData.find((d) => d.id === appointment.doctorId);
           if (userRole === "PATIENT") {
             return (
@@ -295,17 +307,17 @@ const Appointments: React.FC = () => {
                 <List.Item.Meta
                   avatar={doctor && <UserImage userData={doctor} />}
                   title={`Appointment ID ${appointment.id}`}
-                  description={`Patient ID: ${
-                    appointment.patientId
-                  }, Doctor ID: ${appointment.doctorId} - Date: ${moment(
-                    appointment.appointmentTime
-                  ).format("MMMM Do YYYY, h:mm a")} - Status: ${
-                    appointment.status
-                  }`}
+                  description={`Patient ID: ${appointment.patientId}, ${
+                    appointment.doctorId
+                      ? `Doctor ID: ${appointment.doctorId}`
+                      : `Nurse ID: ${appointment.nurseId}`
+                  } - Date: ${moment(appointment.appointmentTime).format(
+                    "MMMM Do YYYY, h:mm a"
+                  )} - Status: ${appointment.status}`}
                 />
               </List.Item>
             );
-          } else if (userRole === "DOCTOR") {
+          } else if (userRole === "DOCTOR" || userRole === "NURSE") {
             return (
               <List.Item
                 actions={[

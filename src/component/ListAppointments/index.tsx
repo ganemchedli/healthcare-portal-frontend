@@ -14,6 +14,7 @@ interface Appointment {
   appointmentTime: string;
   status: string;
   doctorId: number;
+  nurseId: number;
   patientId: number;
 }
 
@@ -76,6 +77,7 @@ const ListAppointments: React.FC = () => {
             <th>Id</th>
             <th>Patient Id</th>
             <th>Doctor Id</th>
+            <th>Nurse Id</th>
             <th>Appointment DateTime</th>
             <th>Status</th>
           </tr>
@@ -85,6 +87,7 @@ const ListAppointments: React.FC = () => {
             <tr key={appointment.id}>
               <td>{appointment.patientId}</td>
               <td>{appointment.doctorId}</td>
+              <td>{appointment.nurseId}</td>
               <td>{appointment.appointmentTime}</td>
               <td>{appointment.status}</td>
               <td>
