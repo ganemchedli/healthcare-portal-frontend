@@ -10,6 +10,13 @@
     "@jridgewell/gen-mapping" "^0.3.5"
     "@jridgewell/trace-mapping" "^0.3.24"
 
+"@ant-design/colors@^6.0.0":
+  version "6.0.0"
+  resolved "https://registry.npmjs.org/@ant-design/colors/-/colors-6.0.0.tgz"
+  integrity sha512-qAZRvPzfdWHtfameEGP2Qvuf838NhergR35o+EuVyB5XvSA98xod5r4utvi4TJ3ywmevm290g9nsCG5MryrdWQ==
+  dependencies:
+    "@ctrl/tinycolor" "^3.4.0"
+
 "@ant-design/colors@^7.0.0", "@ant-design/colors@^7.1.0":
   version "7.1.0"
   resolved "https://registry.npmjs.org/@ant-design/colors/-/colors-7.1.0.tgz"
@@ -30,10 +37,22 @@
     rc-util "^5.35.0"
     stylis "^4.0.13"
 
-"@ant-design/icons-svg@^4.4.0":
+"@ant-design/icons-svg@^4.3.0", "@ant-design/icons-svg@^4.4.0":
   version "4.4.2"
   resolved "https://registry.npmjs.org/@ant-design/icons-svg/-/icons-svg-4.4.2.tgz"
   integrity sha512-vHbT+zJEVzllwP+CM+ul7reTEfBR0vgxFe7+lREAsAA7YGsYpboiq2sQNeQeRvh09GfQgs/GyFEvZpJ9cLXpXA==
+
+"@ant-design/icons@^4.7.0":
+  version "4.8.3"
+  resolved "https://registry.npmjs.org/@ant-design/icons/-/icons-4.8.3.tgz"
+  integrity sha512-HGlIQZzrEbAhpJR6+IGdzfbPym94Owr6JZkJ2QCCnOkPVIWMO2xgIVcOKnl8YcpijIo39V7l2qQL5fmtw56cMw==
+  dependencies:
+    "@ant-design/colors" "^6.0.0"
+    "@ant-design/icons-svg" "^4.3.0"
+    "@babel/runtime" "^7.11.2"
+    classnames "^2.2.6"
+    lodash "^4.17.15"
+    rc-util "^5.9.4"
 
 "@ant-design/icons@^5.3.7":
   version "5.4.0"
@@ -262,7 +281,7 @@
     "@babel/helper-validator-identifier" "^7.24.6"
     to-fast-properties "^2.0.0"
 
-"@ctrl/tinycolor@^3.6.1":
+"@ctrl/tinycolor@^3.4.0", "@ctrl/tinycolor@^3.6.1":
   version "3.6.1"
   resolved "https://registry.npmjs.org/@ctrl/tinycolor/-/tinycolor-3.6.1.tgz"
   integrity sha512-SITSV6aIXsuVNV3f3O0f2n/cgyEDWoSqtZMYiAmcsYHydcKrOz3gUxB/iXd/Qf08+IZX4KpgNbvUdMBmWz+kcA==
@@ -879,6 +898,13 @@
   dependencies:
     "@types/react" "*"
 
+"@types/react-scroll@^1.8.3":
+  version "1.8.10"
+  resolved "https://registry.npmjs.org/@types/react-scroll/-/react-scroll-1.8.10.tgz"
+  integrity sha512-RD4Z7grbdNGOKwKnUBKar6zNxqaW3n8m9QSrfvljW+gmkj1GArb8AFBomVr6xMOgHPD3v1uV3BrIf01py57daQ==
+  dependencies:
+    "@types/react" "*"
+
 "@types/react-transition-group@^4.4.0", "@types/react-transition-group@^4.4.10", "@types/react-transition-group@^4.4.6":
   version "4.4.10"
   resolved "https://registry.npmjs.org/@types/react-transition-group/-/react-transition-group-4.4.10.tgz"
@@ -1125,6 +1151,13 @@ asynckit@^0.4.0:
   version "0.4.0"
   resolved "https://registry.npmjs.org/asynckit/-/asynckit-0.4.0.tgz"
   integrity sha512-Oei9OH4tRh0YqU3GxhX79dM/mwVgvbZJaSNaRk+bshkj0S5cfHcgYakreBjrHwatXKbz+IoIdYLxrKim2MjW0Q==
+
+axios@^0.24.0:
+  version "0.24.0"
+  resolved "https://registry.npmjs.org/axios/-/axios-0.24.0.tgz"
+  integrity sha512-Q6cWsys88HoPgAaFAVUb0WpPk0O8iTeisR9IMqy9G8AbO4NlpVknrnQS03zzF9PGAWgO3cgletO3VjV/P7VztA==
+  dependencies:
+    follow-redirects "^1.14.4"
 
 axios@^1.6.8:
   version "1.7.2"
@@ -1744,7 +1777,7 @@ flatted@^3.2.9:
   resolved "https://registry.npmjs.org/flatted/-/flatted-3.3.1.tgz"
   integrity sha512-X8cqMLLie7KsNUDSdzeN8FYK9rEt4Dt67OsG/DNGnYTSDBG4uFAJFBnUeiV+zCVAvwFy56IjM9sH51jVaEhNxw==
 
-follow-redirects@^1.15.6:
+follow-redirects@^1.14.4, follow-redirects@^1.15.6:
   version "1.15.6"
   resolved "https://registry.npmjs.org/follow-redirects/-/follow-redirects-1.15.6.tgz"
   integrity sha512-wWN62YITEaOpSK584EZXJafH1AGpO8RVgElfkuXbTOrPX4fIfOyEpW/CsiNd8JdYrAoOvafRTOEnvsO++qCqFA==
@@ -1879,6 +1912,46 @@ hasown@^2.0.0:
   integrity sha512-0hJU9SCPvmMzIBdZFqNPXWa6dqh7WdH0cII9y+CyS8rG3nL48Bclra9HmKhVVUHyPWNH5Y7xDwAB7bfgSjkUMQ==
   dependencies:
     function-bind "^1.1.2"
+
+"healthcare-portal-frontend@file:":
+  version "0.0.0"
+  resolved "file:"
+  dependencies:
+    "@emotion/react" "^11.11.4"
+    "@emotion/styled" "^11.11.5"
+    "@fortawesome/fontawesome-svg-core" "^6.5.2"
+    "@fortawesome/free-solid-svg-icons" "^6.5.2"
+    "@fortawesome/react-fontawesome" "^0.2.2"
+    "@headlessui/react" "^1.7.19"
+    "@heroicons/react" "^2.1.3"
+    "@mui/material" "^5.15.15"
+    "@mui/styled-engine-sc" "^6.0.0-alpha.18"
+    "@types/jwt-decode" "^3.1.0"
+    antd "^5.19.1"
+    axios "^1.6.8"
+    bootstrap "^5.3.3"
+    bootstrap-icons "^1.11.3"
+    dayjs "^1.11.11"
+    healthcare-portal-frontend "file:"
+    js-cookie "^3.0.5"
+    jwt-decode "^4.0.0"
+    moment "^2.30.1"
+    qs "^6.12.3"
+    react "18.3.1"
+    react-awesome-reveal "^4.2.12"
+    react-bootstrap "^2.10.2"
+    react-chat-engine-pretty "^0.1.8"
+    react-dom "18.3.1"
+    react-feather "^2.0.10"
+    react-hook-form "^7.51.3"
+    react-modal "^3.16.1"
+    react-router-dom "^6.23.0"
+    react-select "^5.8.0"
+    react-sticky-box "^2.0.5"
+    reactstrap "^9.2.2"
+    sockjs-client "^1.6.1"
+    stompjs "^2.3.3"
+    styled-components "^6.1.8"
 
 hoist-non-react-statics@^3.3.1, hoist-non-react-statics@^3.3.2:
   version "3.3.2"
@@ -2060,10 +2133,25 @@ locate-path@^6.0.0:
   dependencies:
     p-locate "^5.0.0"
 
+lodash-es@^4.17.21:
+  version "4.17.21"
+  resolved "https://registry.npmjs.org/lodash-es/-/lodash-es-4.17.21.tgz"
+  integrity sha512-mKnC+QJ9pWVzv+C4/U3rRsHapFfHvQFoFB92e52xeyGMcX6/OlIl78je1u8vePzYZSkkogMPJ2yjxxsb89cxyw==
+
 lodash.merge@^4.6.2:
   version "4.6.2"
   resolved "https://registry.npmjs.org/lodash.merge/-/lodash.merge-4.6.2.tgz"
   integrity sha512-0KpjqXRVvrYyCsX1swR/XTK0va6VQkQM6MNo7PqW77ByjAhoARA8EfrP1N4+KlKj8YS0ZUCtRT/YUuhyYDujIQ==
+
+lodash.throttle@^4.1.1:
+  version "4.1.1"
+  resolved "https://registry.npmjs.org/lodash.throttle/-/lodash.throttle-4.1.1.tgz"
+  integrity sha512-wIkUCfVKpVsWo3JSZlc+8MB5it+2AN5W8J7YVMST30UrvcQNZ1Okbj+rbVniijTWE6FGYy4XJq/rHkas8qJMLQ==
+
+lodash@^4.17.15, lodash@^4.17.21:
+  version "4.17.21"
+  resolved "https://registry.npmjs.org/lodash/-/lodash-4.17.21.tgz"
+  integrity sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==
 
 loose-envify@^1.0.0, loose-envify@^1.1.0, loose-envify@^1.4.0:
   version "1.4.0"
@@ -2152,6 +2240,13 @@ next-tick@^1.1.0:
   version "1.1.0"
   resolved "https://registry.npmjs.org/next-tick/-/next-tick-1.1.0.tgz"
   integrity sha512-CXdUiJembsNjuToQvxayPZF9Vqht7hewsvy2sOWafLvi2awflj9mOC6bHIg50orX8IJvWKY9wYQ/zB2kogPslQ==
+
+nextjs-websocket@^1.0.8:
+  version "1.0.11"
+  resolved "https://registry.npmjs.org/nextjs-websocket/-/nextjs-websocket-1.0.11.tgz"
+  integrity sha512-5+NsWcl9Oc8fu3n660h7iVwaOQ1ctbANsrfmE8rlXmHI2syQM+1c8Tn3iCd70oxDUQXeuWNgRiCzBfOAKwmKxw==
+  dependencies:
+    websocket "^1.0.33"
 
 node-gyp-build@^4.3.0:
   version "4.8.1"
@@ -2654,7 +2749,7 @@ rc-upload@~4.6.0:
     classnames "^2.2.5"
     rc-util "^5.2.0"
 
-rc-util@^5.0.1, rc-util@^5.16.1, rc-util@^5.17.0, rc-util@^5.18.1, rc-util@^5.2.0, rc-util@^5.20.1, rc-util@^5.21.0, rc-util@^5.24.4, rc-util@^5.25.2, rc-util@^5.27.0, rc-util@^5.30.0, rc-util@^5.31.1, rc-util@^5.32.2, rc-util@^5.34.1, rc-util@^5.35.0, rc-util@^5.36.0, rc-util@^5.37.0, rc-util@^5.38.0, rc-util@^5.38.1, rc-util@^5.40.1, rc-util@^5.43.0:
+rc-util@^5.0.1, rc-util@^5.16.1, rc-util@^5.17.0, rc-util@^5.18.1, rc-util@^5.2.0, rc-util@^5.20.1, rc-util@^5.21.0, rc-util@^5.24.4, rc-util@^5.25.2, rc-util@^5.27.0, rc-util@^5.30.0, rc-util@^5.31.1, rc-util@^5.32.2, rc-util@^5.34.1, rc-util@^5.35.0, rc-util@^5.36.0, rc-util@^5.37.0, rc-util@^5.38.0, rc-util@^5.38.1, rc-util@^5.40.1, rc-util@^5.43.0, rc-util@^5.9.4:
   version "5.43.0"
   resolved "https://registry.npmjs.org/rc-util/-/rc-util-5.43.0.tgz"
   integrity sha512-AzC7KKOXFqAdIBqdGWepL9Xn7cm3vnAmjlHqUnoQaTMZYhM4VlXGLkkHHxj/BZ7Td0+SOPKB4RGPboBVKT9htw==
@@ -2698,7 +2793,30 @@ react-bootstrap@^2.10.2:
     uncontrollable "^7.2.1"
     warning "^4.0.3"
 
-react-dom@*, "react-dom@^0.14.0 || ^15.0.0 || ^16 || ^17 || ^18", "react-dom@^15.0.0 || ^16.0.0 || ^17.0.0 || ^18.0.0 || ^19.0.0", "react-dom@^16 || ^17 || ^18", "react-dom@^16.8.0 || ^17 || ^18", "react-dom@^16.8.0 || ^17.0.0 || ^18.0.0", "react-dom@^17.0.0 || ^18.0.0", "react-dom@>= 16.8.0", react-dom@>=16.0.0, react-dom@>=16.11.0, react-dom@>=16.14.0, react-dom@>=16.6.0, react-dom@>=16.8, react-dom@>=16.8.0, react-dom@>=16.9.0, react-dom@18.3.1:
+react-chat-engine-advanced@^0.1.25:
+  version "0.1.28"
+  resolved "https://registry.npmjs.org/react-chat-engine-advanced/-/react-chat-engine-advanced-0.1.28.tgz"
+  integrity sha512-1OOgcgHrAQfquOYIiU/CVcMi6cyc4u9KcSlNlC/pm0UJuLJ2iMvJ3+3n7fn2HloWc0JFyV5yiVW0xGLCgbokNg==
+  dependencies:
+    "@ant-design/icons" "^4.7.0"
+    "@types/react-scroll" "^1.8.3"
+    axios "^0.24.0"
+    lodash "^4.17.21"
+    lodash-es "^4.17.21"
+    nextjs-websocket "^1.0.8"
+    react-grid-system "^7.3.2"
+    react-scroll "^1.8.4"
+
+react-chat-engine-pretty@^0.1.8:
+  version "0.1.8"
+  resolved "https://registry.npmjs.org/react-chat-engine-pretty/-/react-chat-engine-pretty-0.1.8.tgz"
+  integrity sha512-wAd2P6FToGBmrc5EC30ZExlLJKdzxlixGtRjqtOA9avXp7V5BuogjF8enk+KLFoUxIkIDAohMiQUniJ7Gow72g==
+  dependencies:
+    "@ant-design/icons" "^4.7.0"
+    react-chat-engine-advanced "^0.1.25"
+    react-select "^5.4.0"
+
+react-dom@*, "react-dom@^0.14.0 || ^15.0.0 || ^16 || ^17 || ^18", "react-dom@^15.0.0 || ^16.0.0 || ^17.0.0 || ^18.0.0 || ^19.0.0", "react-dom@^15.5.4 || ^16.0.0 || ^17.0.0 || ^18.0.0", "react-dom@^16 || ^17 || ^18", "react-dom@^16.8.0 || ^17 || ^18", "react-dom@^16.8.0 || ^17.0.0 || ^18.0.0", "react-dom@^17.0.0 || ^18.0.0", "react-dom@>= 16.8.0", react-dom@>=16.0.0, react-dom@>=16.11.0, react-dom@>=16.14.0, react-dom@>=16.6.0, react-dom@>=16.8, react-dom@>=16.8.0, react-dom@>=16.9.0, react-dom@18.3.1:
   version "18.3.1"
   resolved "https://registry.npmjs.org/react-dom/-/react-dom-18.3.1.tgz"
   integrity sha512-5m4nQKp+rZRb09LNH59GM4BxTh9251/ylbKIbpe7TpGxfJ+9kv6BLkLBXIjjspbgbnIBNqlI23tRnTWT0snUIw==
@@ -2718,6 +2836,13 @@ react-feather@^2.0.10:
   dependencies:
     prop-types "^15.7.2"
 
+react-grid-system@^7.3.2:
+  version "7.3.2"
+  resolved "https://registry.npmjs.org/react-grid-system/-/react-grid-system-7.3.2.tgz"
+  integrity sha512-SR5FKJvvN+Sl/OqSpyhLaesfc2cHKxFlP5xL53jUp3m+vF40OYiJbCuW+U43YeNEZQUfR38K3Ec+dVxl9y6MUg==
+  dependencies:
+    prop-types "^15.7.2"
+
 react-hook-form@^7.51.3:
   version "7.51.5"
   resolved "https://registry.npmjs.org/react-hook-form/-/react-hook-form-7.51.5.tgz"
@@ -2728,7 +2853,17 @@ react-intersection-observer@^9.13.0:
   resolved "https://registry.npmjs.org/react-intersection-observer/-/react-intersection-observer-9.13.0.tgz"
   integrity sha512-y0UvBfjDiXqC8h0EWccyaj4dVBWMxgEx0t5RGNzQsvkfvZwugnKwxpu70StY4ivzYuMajavwUDjH4LJyIki9Lw==
 
-react-is@^16.13.1, react-is@^16.3.2, react-is@^16.7.0:
+react-is@^16.13.1:
+  version "16.13.1"
+  resolved "https://registry.npmjs.org/react-is/-/react-is-16.13.1.tgz"
+  integrity sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==
+
+react-is@^16.3.2:
+  version "16.13.1"
+  resolved "https://registry.npmjs.org/react-is/-/react-is-16.13.1.tgz"
+  integrity sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==
+
+react-is@^16.7.0:
   version "16.13.1"
   resolved "https://registry.npmjs.org/react-is/-/react-is-16.13.1.tgz"
   integrity sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==
@@ -2786,7 +2921,15 @@ react-router@6.23.1:
   dependencies:
     "@remix-run/router" "1.16.1"
 
-react-select@^5.8.0:
+react-scroll@^1.8.4:
+  version "1.9.0"
+  resolved "https://registry.npmjs.org/react-scroll/-/react-scroll-1.9.0.tgz"
+  integrity sha512-mamNcaX9Ng+JeSbBu97nWwRhYvL2oba+xR2GxvyXsbDeGP+gkYIKZ+aDMMj/n20TbV9SCWm/H7nyuNTSiXA6yA==
+  dependencies:
+    lodash.throttle "^4.1.1"
+    prop-types "^15.7.2"
+
+react-select@^5.4.0, react-select@^5.8.0:
   version "5.8.0"
   resolved "https://registry.npmjs.org/react-select/-/react-select-5.8.0.tgz"
   integrity sha512-TfjLDo58XrhP6VG5M/Mi56Us0Yt8X7xD6cDybC7yoRMUNm7BGO7qk8J0TLQOua/prb8vUOtsfnXZwfm30HGsAA==
@@ -2816,7 +2959,7 @@ react-transition-group@^4.3.0, react-transition-group@^4.4.2, react-transition-g
     loose-envify "^1.4.0"
     prop-types "^15.6.2"
 
-react@*, "react@^0.14.0 || ^15.0.0 || ^16 || ^17 || ^18", "react@^15.0.0 || ^16.0.0 || ^17.0.0 || ^18.0.0 || ^19.0.0", "react@^16 || ^17 || ^18", "react@^16.8.0 || ^17 || ^18", "react@^16.8.0 || ^17.0.0 || ^18.0.0", "react@^16.8.0 || ^17.0.0-rc.1 || ^18.0.0", "react@^17.0.0 || ^18.0.0", react@^18.3.1, "react@>= 16", "react@>= 16.8.0", react@>=0.14.0, react@>=15.0.0, react@>=16.0.0, react@>=16.11.0, react@>=16.14.0, react@>=16.3, react@>=16.6.0, react@>=16.8, react@>=16.8.0, react@>=16.8.6, react@>=16.9.0, react@18.3.1:
+react@*, "react@^0.14.0 || ^15.0.0 || ^16 || ^17 || ^18", "react@^15.0.0 || ^16.0.0 || ^17.0.0 || ^18.0.0 || ^19.0.0", "react@^15.5.4 || ^16.0.0 || ^17.0.0 || ^18.0.0", "react@^16 || ^17 || ^18", "react@^16.8.0 || ^17 || ^18", "react@^16.8.0 || ^17.0.0 || ^18.0.0", "react@^16.8.0 || ^17.0.0-rc.1 || ^18.0.0", "react@^16.8.0 || ^17.0.1 || ^18.2.0", "react@^16.8.0 || ^17.x", "react@^17.0.0 || ^18.0.0", react@^18.3.1, "react@>= 16", "react@>= 16.8.0", react@>=0.14.0, react@>=15.0.0, react@>=16, react@>=16.0.0, react@>=16.11.0, react@>=16.14.0, react@>=16.3, react@>=16.6.0, react@>=16.8, react@>=16.8.0, react@>=16.8.6, react@>=16.9.0, react@18.3.1:
   version "18.3.1"
   resolved "https://registry.npmjs.org/react/-/react-18.3.1.tgz"
   integrity sha512-wS+hAgJShR0KhEvPJArfuPVN1+Hz1t0Y6n5jLrGQbkb4urgPE/0Rve+1kMB1v/oWgHgm4WIcV+i7F2pTVj+2iQ==
@@ -3223,7 +3366,7 @@ websocket-extensions@>=0.1.1:
   resolved "https://registry.npmjs.org/websocket-extensions/-/websocket-extensions-0.1.4.tgz"
   integrity sha512-OqedPIGOfsDlo31UNwYbCFMSaO9m9G/0faIHj5/dZFDMFqPTcx6UwqyOy3COEaEOg/9VsGIpdqn62W5KhoKSpg==
 
-websocket@latest:
+websocket@^1.0.33, websocket@latest:
   version "1.0.35"
   resolved "https://registry.npmjs.org/websocket/-/websocket-1.0.35.tgz"
   integrity sha512-/REy6amwPZl44DDzvRCkaI1q1bIiQB0mEFQLUrhz3z2EK91cp3n72rAjUlrTP0zV22HJIUOVHQGPxhFRjxjt+Q==

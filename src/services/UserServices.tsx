@@ -4,6 +4,9 @@ export const listUsers = () => axios.get("auth/get_all_users");
 
 export const getUserByEmail = () => axios.get("auth/me");
 
+export const getUserByEmailClient = (email: string) =>
+  axios.get("auth/get_user", { params: { email: email } });
+
 export const getUser = async (userId: any) =>
   axios.get("auth/get_user/" + userId);
 
