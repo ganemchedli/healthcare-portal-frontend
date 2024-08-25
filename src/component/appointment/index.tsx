@@ -350,13 +350,23 @@ const Appointments: React.FC = () => {
           }
         }}
       />
-      <Button
-        type="primary"
-        style={{ position: "absolute", right: 10, top: 0 }}
-        onClick={showModal}
-      >
-        Add Appointment
-      </Button>
+      {userRole === "PATIENT" ? (
+        <Button
+          type="primary"
+          style={{ position: "absolute", right: 10, top: 0 }}
+          onClick={showModal}
+        >
+          Book an Appointment
+        </Button>
+      ) : (
+        <Button
+          type="primary"
+          style={{ position: "absolute", right: 10, top: 0 }}
+          onClick={showModal}
+        >
+          Add an Appointment
+        </Button>
+      )}
       <Modal
         title="Create New Appointment"
         visible={isModalVisible}

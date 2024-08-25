@@ -93,6 +93,7 @@ const Doctor: React.FC<DoctorProps> = () => {
 
   useEffect(() => {
     getDoctorData();
+    console.log(doctorData);
   }, []);
   return (
     <Layout hasSider>
