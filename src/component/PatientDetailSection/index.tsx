@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Input, Button, notification, Card } from "antd";
-import { getPatientByEmail } from "../../services/EmrService"; // Ensure this function is correctly imported
+import { getPatientByEmailByClient } from "../../services/EmrService"; // Ensure this function is correctly imported
 
 import UserImage from "../UserImage";
 interface PatientDetails {
@@ -42,7 +42,7 @@ const PatientDetailsSection: React.FC<PatientDetailProps> = ({ emrId }) => {
     setLoading(true);
 
     try {
-      const patientData = await getPatientByEmail(email, emrId); // Ensure this function is correctly implemented
+      const patientData = await getPatientByEmailByClient(email); // Ensure this function is correctly implemented
       console.log("Patient Data:", patientData);
       setPatientDetails(patientData);
       notification.success({

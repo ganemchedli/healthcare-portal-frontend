@@ -79,7 +79,7 @@ export const getPatientByEmail = async (email: any, emrId: any) => {
   }
 };
 
-export const getPatientByEmailByClient = async (email: any) => {
+export const getPatientByEmailByClient = async (email: string) => {
   try {
     const response = await axios.get("patient/client/email", {
       params: { email },

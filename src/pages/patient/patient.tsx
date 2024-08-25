@@ -41,7 +41,6 @@ const Patient: React.FC = () => {
 
   useEffect(() => {
     fetchPatientData(id);
-    console.log("Patient data", patientData);
   }, [id]);
 
   const fetchPatientData = async (id: string | null) => {
