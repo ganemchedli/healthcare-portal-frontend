@@ -235,6 +235,12 @@ const ElectronicMedicalRecord: React.FC<ElectronicMedicalRecordProps> = ({
 
   useEffect(() => {
     fetchData();
+    console.log("Labtest", labTests);
+    console.log("Medications", medications);
+    console.log(
+      "Vital signs",
+      vitalSigns.map((v) => v.bloodPressure)
+    );
   }, [patientEmail]);
 
   const fetchData = async () => {

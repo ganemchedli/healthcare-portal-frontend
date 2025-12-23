@@ -1,9 +1,22 @@
 import { useEffect, useState } from "react";
+import axios from "axios";
 import { getUserByEmailClient } from "../../services/UserServices";
 import { PrettyChatWindow } from "react-chat-engine-pretty";
-import { LoadingOutlined } from "@ant-design/icons";
-import { Spin } from "antd";
-import { login_, signup_ } from "../../services/ChatService";
+
+interface User {
+  id: number;
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+  address: string;
+  phoneNumber: number;
+  birthday: string;
+  state: string;
+  city: string;
+  zipCode: number;
+  role: string;
+}
 
 const Messaging: React.FC = () => {
   const [firstName, setFirstName] = useState<string>("");
@@ -40,6 +53,8 @@ const Messaging: React.FC = () => {
       await login(username, secret);
       setIsAuthenticated(true); // Set as authenticated after successful login
     } catch (error) {
+      console.log("User does not exist, attempting to sign up.");
+
       // If login fails, sign up the user
       await signup(username, secret, email, firstName, lastName);
       // Attempt to login again after signup
@@ -50,7 +65,10 @@ const Messaging: React.FC = () => {
 
   const login = async (username: string, secret: string) => {
     try {
-      const response = await login_(username, secret);
+      const response = await axios.post("http://localhost:3001/login", {
+        username,
+        secret,
+      });
       console.log("Login response", response);
     } catch (error) {
       throw new Error("Login failed");
@@ -65,13 +83,13 @@ const Messaging: React.FC = () => {
     last_name: string
   ) => {
     try {
-      const response = await signup_(
+      const response = await axios.post("http://localhost:3001/signup", {
         username,
         secret,
         email,
         first_name,
-        last_name
-      );
+        last_name,
+      });
       console.log("Signup response", response);
     } catch (error) {
       throw new Error("Signup failed");
@@ -81,16 +99,34 @@ const Messaging: React.FC = () => {
   return (
     <div style={{ height: "80vh", width: "80vw" }}>
       {isAuthenticated ? (
-        <PrettyChatWindow
-          projectId={"10b6dc4d-b533-48fc-8790-0dc7d5c1b635"}
-          username={username}
-          secret={secret}
-          style={{ height: "100%" }}
-        />
+        // <PrettyChatWindow
+        //   projectId={"10b6dc4d-b533-48fc-8790-0dc7d5c1b635"}
+        //   username={username}
+        //   secret={secret}
+        //   style={{ height: "100%" }}
+        // />
+        <ChatEngine
+			projectID='00000000-0000-0000-0000-000000000000'
+			userName='adam'
+			userSecret='pass1234'
+			// Render Custom Components
+			height='100vh'
+			renderChatList={(chatAppState) => {}}
+			renderChatCard={(chat, index) => {}}
+			renderNewChatForm={(creds) => {}}
+			renderChatFeed={(chatAppState) => {}}
+			renderChatHeader={(chat) => {}}
+			renderMessageBubble={(creds, chat, lastMessage, message, nextMessage) => {}}
+			renderIsTyping={(typers) => {}}
+			renderNewMessageForm={(creds, chatId) => {}}
+			renderChatSettings={(chatAppState) => {}}
+			renderChatSettingsTop={(creds, chat) => {}}
+			renderPeopleSettings={(creds, chat) => {}}
+			renderPhotosSettings={(chat) => {}}
+			renderOptionsSettings={(creds, chat) => {}}
+		/>
       ) : (
-        <div className="text-center">
-          <Spin indicator={<LoadingOutlined style={{ fontSize: 48 }} spin />} />
-        </div>
+        <div>Loading chat...</div>
       )}
     </div>
   );
